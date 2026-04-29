@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-gray-900 antialiased;
+  }
+}
+
+/* Leaflet z-index fix inside modals */
+.leaflet-pane { z-index: 400; }
+.leaflet-control { z-index: 500; }
+.leaflet-top, .leaflet-bottom { z-index: 500; }

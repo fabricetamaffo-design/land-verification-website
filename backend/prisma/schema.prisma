@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role     @default(USER)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  uploadedLands LandParcel[] @relation("UploadedBy")
+  auditLogs     AuditLog[]
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model LandParcel {
+  id          String     @id @default(uuid())
+  titleNumber String     @unique @map("title_number")
+  ownerName   String     @map("owner_name")
+  quarter     String
+  areaSqm     Float      @map("area_sqm")
+  gpsLat      Float      @map("gps_lat")
+  gpsLng      Float      @map("gps_lng")
+  status      LandStatus @default(VALID)
+  notes       String?
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  uploadedById String @map("uploaded_by_id")
+  uploadedBy   User   @relation("UploadedBy", fields: [uploadedById], references: [id])
+
+  documents LandDocument[]
+  auditLogs AuditLog[]
+
+  @@map("land_parcels")
+}
+
+enum LandStatus {
+  VALID
+  SUSPICIOUS
+  DUPLICATE
+}
+
+model LandDocument {
+  id         String   @id @default(uuid())
+  landId     String   @map("land_id")
+  fileName   String   @map("file_name")
+  filePath   String   @map("file_path")
+  uploadedAt DateTime @default(now()) @map("uploaded_at")
+
+  land LandParcel @relation(fields: [landId], references: [id], onDelete: Cascade)
+
+  @@map("land_documents")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  landId    String   @map("land_id")
+  userId    String   @map("user_id")
+  action    String
+  changes   Json?
+  timestamp DateTime @default(now())
+
+  land LandParcel @relation(fields: [landId], references: [id], onDelete: Cascade)
+  user User       @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
