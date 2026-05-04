@@ -29,24 +29,27 @@ enum Role {
 }
 
 model LandParcel {
-  id          String     @id @default(uuid())
-  titleNumber String     @unique @map("title_number")
-  ownerName   String     @map("owner_name")
-  quarter     String
-  areaSqm     Float      @map("area_sqm")
-  gpsLat      Float      @map("gps_lat")
-  gpsLng      Float      @map("gps_lng")
-  status      LandStatus @default(VALID)
-  notes       String?
-  isActive    Boolean    @default(true) @map("is_active")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
+  id                String     @id @default(uuid())
+  titleNumber       String     @unique @map("title_number")
+  ownerName         String     @map("owner_name")
+  quarter           String
+  areaSqm           Float      @map("area_sqm")
+  gpsLat            Float      @map("gps_lat")
+  gpsLng            Float      @map("gps_lng")
+  status            LandStatus @default(VALID)
+  notes             String?
+  isActive          Boolean    @default(true) @map("is_active")
+  titleApprovedYear Int?       @map("title_approved_year")
+  landUseType       String     @default("RESIDENTIAL") @map("land_use_type")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
 
   uploadedById String @map("uploaded_by_id")
   uploadedBy   User   @relation("UploadedBy", fields: [uploadedById], references: [id])
 
-  documents LandDocument[]
-  auditLogs AuditLog[]
+  documents        LandDocument[]
+  auditLogs        AuditLog[]
+  ownershipHistory OwnershipRecord[]
 
   @@map("land_parcels")
 }
@@ -55,6 +58,21 @@ enum LandStatus {
   VALID
   SUSPICIOUS
   DUPLICATE
+}
+
+model OwnershipRecord {
+  id            String   @id @default(uuid())
+  landId        String   @map("land_id")
+  ownerName     String   @map("owner_name")
+  ownershipType String   @default("PURCHASE") @map("ownership_type")
+  fromYear      Int      @map("from_year")
+  toYear        Int?     @map("to_year")
+  notes         String?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  land LandParcel @relation(fields: [landId], references: [id], onDelete: Cascade)
+
+  @@map("ownership_records")
 }
 
 model LandDocument {

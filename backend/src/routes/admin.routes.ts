@@ -10,6 +10,8 @@ import {
   getAllLands,
   getAllUsers,
   getAuditLogs,
+  addOwnershipRecord,
+  deleteOwnershipRecord,
 } from '../controllers/admin.controller';
 
 const storage = multer.diskStorage({
@@ -22,7 +24,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     const allowed = ['.pdf', '.jpg', '.jpeg', '.png'];
     const ext = path.extname(file.originalname).toLowerCase();
@@ -31,7 +33,6 @@ const upload = multer({
 });
 
 const router = Router();
-
 router.use(authenticate, requireAdmin);
 
 router.get('/lands', getAllLands);
@@ -40,5 +41,7 @@ router.put('/lands/:id', upload.array('documents', 5), updateLand);
 router.patch('/lands/:id/deactivate', deactivateLand);
 router.get('/users', getAllUsers);
 router.get('/lands/:landId/audit', getAuditLogs);
+router.post('/lands/:landId/ownership', addOwnershipRecord);
+router.delete('/ownership/:recordId', deleteOwnershipRecord);
 
 export default router;

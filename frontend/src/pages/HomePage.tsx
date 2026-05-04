@@ -80,7 +80,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-black text-white leading-tight mb-2"
+            className="text-5xl md:text-7xl font-black text-white leading-tight mb-2 drop-shadow-lg"
           >
             {t.hero.title}
           </motion.h1>
@@ -88,7 +88,8 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-black text-gradient leading-tight mb-8"
+            className="text-5xl md:text-7xl font-black leading-tight mb-8"
+            style={{ color: '#fbbf24', textShadow: '0 2px 20px rgba(251,191,36,0.4)' }}
           >
             {t.hero.titleHighlight}
           </motion.h1>
@@ -179,7 +180,7 @@ export default function HomePage() {
           <Section className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { target: 500, suffix: '+', label: t.stats.parcels, icon: '🏘️' },
-              { target: 3, suffix: '', label: t.stats.statuses, icon: '✅' },
+              { target: 2, suffix: '', label: t.stats.statuses, icon: '✅' },
               { target: 99, suffix: '%', label: t.stats.uptime, icon: '⚡' },
               { target: 120, suffix: '+', label: t.stats.users, icon: '👥' },
             ].map((s, i) => (
@@ -243,22 +244,21 @@ export default function HomePage() {
               <p className="text-gray-500 max-w-xl mx-auto">{t.statusGuide.subtitle}</p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
               {[
-                { status: t.statusGuide.statuses[0], color: 'green', icon: '✓', from: 'from-emerald-500', to: 'to-green-600', bg: 'from-emerald-50 to-green-50', border: 'border-emerald-200', text: 'text-emerald-700' },
-                { status: t.statusGuide.statuses[1], color: 'amber', icon: '!', from: 'from-amber-500', to: 'to-orange-500', bg: 'from-amber-50 to-orange-50', border: 'border-amber-200', text: 'text-amber-700' },
-                { status: t.statusGuide.statuses[2], color: 'red', icon: '✕', from: 'from-red-500', to: 'to-rose-600', bg: 'from-red-50 to-rose-50', border: 'border-red-200', text: 'text-red-700' },
+                { status: t.statusGuide.statuses[0], icon: '✓', from: 'from-emerald-500', to: 'to-green-600', bg: 'from-emerald-50 to-green-50', border: 'border-emerald-200', text: 'text-emerald-700' },
+                { status: t.statusGuide.statuses[1], icon: '✕', from: 'from-red-500', to: 'to-rose-600', bg: 'from-red-50 to-rose-50', border: 'border-red-200', text: 'text-red-700' },
               ].map((item, i) => (
                 <motion.div
                   key={i}
                   variants={fadeUp}
                   custom={i}
-                  className={`rounded-2xl p-7 border ${item.border} bg-gradient-to-br ${item.bg} hover:shadow-lg transition-all duration-300 group`}
+                  className={`rounded-2xl p-8 border ${item.border} bg-gradient-to-br ${item.bg} hover:shadow-lg transition-all duration-300 group`}
                 >
-                  <div className={`w-12 h-12 bg-gradient-to-br ${item.from} ${item.to} rounded-xl flex items-center justify-center text-white font-black text-xl mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`w-14 h-14 bg-gradient-to-br ${item.from} ${item.to} rounded-2xl flex items-center justify-center text-white font-black text-2xl mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     {item.icon}
                   </div>
-                  <p className={`font-bold text-xl mb-3 ${item.text}`}>{item.status.status}</p>
+                  <p className={`font-black text-2xl mb-3 ${item.text}`}>{item.status.status}</p>
                   <p className="text-sm text-gray-600 leading-relaxed">{item.status.desc}</p>
                 </motion.div>
               ))}

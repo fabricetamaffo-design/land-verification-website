@@ -9,6 +9,13 @@ export async function searchLands(q?: string, quarter?: string) {
   return res.data as { results: SearchResult[]; count: number };
 }
 
+export async function browseLands(quarter?: string) {
+  const params: Record<string, string> = {};
+  if (quarter) params.quarter = quarter;
+  const res = await api.get('/lands/browse', { params });
+  return res.data as { results: SearchResult[]; count: number };
+}
+
 export async function getLandById(id: string) {
   const res = await api.get(`/lands/${id}`);
   return res.data as { land: LandParcel };

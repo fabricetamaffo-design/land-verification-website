@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { adminGetAllLands, adminGetUsers } from '../../services/land.service';
 import { LandParcel } from '../../types';
@@ -11,6 +11,7 @@ export default function AdminDashboard() {
   const [userCount, setUserCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const { t } = useLang();
+  const navigate = useNavigate();
 
   useEffect(() => {
     Promise.all([adminGetAllLands(), adminGetUsers()])
@@ -113,8 +114,7 @@ export default function AdminDashboard() {
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50 text-gray-400 text-xs uppercase tracking-widest">
                     <tr>
-                      <th className="px-6 py-3.5 text-left font-semibold">Title Number</th>
-                      <th className="px-6 py-3.5 text-left font-semibold">Owner</th>
+                      <th className="px-6 py-3.5 text-left font-semibold">Title / Owner</th>
                       <th className="px-6 py-3.5 text-left font-semibold">Quarter</th>
                       <th className="px-6 py-3.5 text-left font-semibold">Area (m²)</th>
                       <th className="px-6 py-3.5 text-left font-semibold">Status</th>
@@ -124,20 +124,27 @@ export default function AdminDashboard() {
                   </thead>
                   <tbody className="divide-y divide-gray-50">
                     {lands.slice(0, 10).map((land) => (
-                      <tr key={land.id} className="hover:bg-gray-50/80 transition-colors">
-                        <td className="px-6 py-4 font-bold text-gray-900">{land.titleNumber}</td>
-                        <td className="px-6 py-4 text-gray-600">{land.ownerName}</td>
+                      <tr
+                        key={land.id}
+                        onClick={() => navigate(`/lands/${land.id}`)}
+                        className="cursor-pointer hover:bg-green-50 transition-colors duration-150"
+                      >
+                        <td className="px-6 py-4">
+                          <p className="font-bold text-gray-900">{land.titleNumber}</p>
+                          <p className="text-[11px] text-gray-400 mt-0.5">{land.ownerName}</p>
+                        </td>
                         <td className="px-6 py-4 text-gray-600">{land.quarter}</td>
                         <td className="px-6 py-4 text-gray-600">{land.areaSqm.toLocaleString()}</td>
-                        <td className="px-6 py-4"><StatusBadge status={land.status} /></td>
+                        <td className="px-6 py-4"><StatusBadge status={land.status} compact /></td>
                         <td className="px-6 py-4">
                           <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${land.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                             {land.isActive ? t.common.active : t.common.inactive}
                           </span>
                         </td>
-                        <td className="px-6 py-4 flex items-center gap-3">
-                          <Link to={`/admin/edit/${land.id}`} className="text-green-600 hover:text-green-500 text-xs font-semibold">{t.common.edit}</Link>
-                          <Link to={`/lands/${land.id}`} className="text-gray-400 hover:text-gray-600 text-xs">{t.common.view}</Link>
+                        <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center gap-3">
+                            <Link to={`/admin/edit/${land.id}`} className="text-green-600 hover:text-green-500 text-xs font-semibold">{t.common.edit}</Link>
+                          </div>
                         </td>
                       </tr>
                     ))}
