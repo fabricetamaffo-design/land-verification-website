@@ -1,18 +1,33 @@
 import React from 'react';
 import { LandStatus } from '../types';
+import { useLang } from '../context/LanguageContext';
 
-const config: Record<LandStatus, { label: string; classes: string }> = {
-  VALID:      { label: 'Valid',      classes: 'bg-green-100 text-green-800 border border-green-300' },
-  SUSPICIOUS: { label: 'Suspicious', classes: 'bg-orange-100 text-orange-800 border border-orange-300' },
-  DUPLICATE:  { label: 'Duplicate',  classes: 'bg-red-100 text-red-800 border border-red-300' },
+const config: Record<LandStatus, { classes: string; dot: string; icon: string }> = {
+  VALID: {
+    classes: 'bg-emerald-50 text-emerald-700 border border-emerald-200 ring-1 ring-emerald-300/50',
+    dot: 'bg-emerald-500',
+    icon: '✓',
+  },
+  SUSPICIOUS: {
+    classes: 'bg-amber-50 text-amber-700 border border-amber-200 ring-1 ring-amber-300/50',
+    dot: 'bg-amber-500',
+    icon: '!',
+  },
+  DUPLICATE: {
+    classes: 'bg-red-50 text-red-700 border border-red-200 ring-1 ring-red-300/50',
+    dot: 'bg-red-500',
+    icon: '✕',
+  },
 };
 
 export default function StatusBadge({ status }: { status: LandStatus }) {
-  const { label, classes } = config[status];
+  const { t } = useLang();
+  const { classes, dot, icon } = config[status];
   return (
-    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${classes}`}>
-      <span className="mr-1.5 h-2 w-2 rounded-full bg-current opacity-70" />
-      {label}
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide ${classes}`}>
+      <span className={`h-1.5 w-1.5 rounded-full pulse-dot ${dot}`} />
+      <span>{icon}</span>
+      {t.status[status]}
     </span>
   );
 }
