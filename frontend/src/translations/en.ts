@@ -4,6 +4,7 @@ export const en = {
     search: 'Search',
     browse: 'Browse',
     admin: 'Admin Panel',
+    support: 'Support',
     login: 'Login',
     register: 'Register',
     logout: 'Logout',
