@@ -194,6 +194,12 @@ export const en = {
     showing: 'Showing',
     of: 'of',
     viewAll: 'View all',
+    deleteRecord: 'Delete Record',
+    confirmDelete: 'Are you sure you want to delete this record? This action cannot be undone.',
+    deactivate: 'Deactivate',
+    activate: 'Activate',
+    filterByStatus: 'Filter by Status',
+    allStatuses: 'All Statuses',
   },
   footer: {
     tagline: 'Secure, centralized land verification platform for Cameroon. Eliminating fraud, one title at a time.',
