@@ -150,6 +150,11 @@ export const fr: Translations = {
     reset: 'Réinitialiser',
     parcelsFound: 'parcelle(s) trouvée(s)',
     noResults: 'Aucune parcelle trouvée pour les filtres sélectionnés.',
+    loadMore: 'Charger Plus',
+    noMore: 'Plus de parcelles à charger.',
+    sortBy: 'Trier par',
+    sortNewest: 'Plus Récent',
+    sortOldest: 'Plus Ancien',
   },
   landDetail: {
     back: '← Retour à la Recherche',
@@ -218,6 +223,12 @@ export const fr: Translations = {
     showing: 'Affichage',
     of: 'sur',
     viewAll: 'Voir tout',
+    deleteRecord: "Supprimer l'enregistrement",
+    confirmDelete: "Êtes-vous sûr de vouloir supprimer cet enregistrement ? Cette action est irréversible.",
+    deactivate: 'Désactiver',
+    activate: 'Activer',
+    filterByStatus: 'Filtrer par Statut',
+    allStatuses: 'Tous les Statuts',
   },
   footer: {
     tagline: 'Plateforme sécurisée et centralisée de vérification foncière pour le Cameroun. Éliminons la fraude, un titre à la fois.',
@@ -232,6 +243,13 @@ export const fr: Translations = {
     copyright: '© 2026 LandVerifyCM. Construit à des fins éducatives.',
     privacyPolicy: 'Politique de Confidentialité',
     terms: "Conditions d'Utilisation",
+  },
+  map: {
+    tooltip: 'Cliquez pour voir les détails de la parcelle',
+    loading: 'Chargement de la carte…',
+    noLocation: "Emplacement non disponible pour cette parcelle.",
+    zoomHint: 'Utilisez la molette pour zoomer',
+    markerLabel: 'Emplacement de la parcelle',
   },
   notFound: {
     title: 'Page Introuvable',

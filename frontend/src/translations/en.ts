@@ -148,6 +148,11 @@ export const en = {
     reset: 'Reset',
     parcelsFound: 'parcel(s) found',
     noResults: 'No land parcels found for the selected filters.',
+    loadMore: 'Load More',
+    noMore: 'No more parcels to load.',
+    sortBy: 'Sort by',
+    sortNewest: 'Newest First',
+    sortOldest: 'Oldest First',
   },
   landDetail: {
     back: '← Back to Search',
@@ -216,6 +221,12 @@ export const en = {
     showing: 'Showing',
     of: 'of',
     viewAll: 'View all',
+    deleteRecord: 'Delete Record',
+    confirmDelete: 'Are you sure you want to delete this record? This action cannot be undone.',
+    deactivate: 'Deactivate',
+    activate: 'Activate',
+    filterByStatus: 'Filter by Status',
+    allStatuses: 'All Statuses',
   },
   footer: {
     tagline: 'Secure, centralized land verification platform for Cameroon. Eliminating fraud, one title at a time.',
@@ -230,6 +241,13 @@ export const en = {
     copyright: '© 2026 LandVerifyCM. Built for educational purposes.',
     privacyPolicy: 'Privacy Policy',
     terms: 'Terms of Use',
+  },
+  map: {
+    tooltip: 'Click to view parcel details',
+    loading: 'Loading map…',
+    noLocation: 'Location not available for this parcel.',
+    zoomHint: 'Use scroll wheel to zoom in/out',
+    markerLabel: 'Land parcel location',
   },
   notFound: {
     title: 'Page Not Found',
