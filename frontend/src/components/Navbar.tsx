@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
+import { adminGetSupportUnreadCount, getMySupportUnreadCount } from '../services/support.service';
+import { connectSupportSocket } from '../services/support.socket';
 
 export default function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
@@ -12,6 +14,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [supportUnread, setSupportUnread] = useState(0);
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,6 +35,49 @@ export default function Navbar() {
 
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setSupportUnread(0);
+      return;
+    }
+
+    let mounted = true;
+    const refreshUnread = async () => {
+      try {
+        const unread = isAdmin ? await adminGetSupportUnreadCount() : await getMySupportUnreadCount();
+        if (mounted) setSupportUnread(unread);
+      } catch {
+        if (mounted) setSupportUnread(0);
+      }
+    };
+
+    refreshUnread();
+    const interval = setInterval(refreshUnread, 30000);
+    const onUnreadChanged = () => refreshUnread();
+    window.addEventListener('support-unread-changed', onUnreadChanged);
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+      window.removeEventListener('support-unread-changed', onUnreadChanged);
+    };
+  }, [isAuthenticated, isAdmin]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !user) return;
+    const token = localStorage.getItem('lv_token');
+    if (!token) return;
+
+    const socket = connectSupportSocket(token);
+    const onMessage = () => window.dispatchEvent(new Event('support-unread-changed'));
+    socket.on('support:message', onMessage);
+
+    return () => {
+      socket.off('support:message', onMessage);
+      socket.disconnect();
+    };
+  }, [isAuthenticated, user?.id]);
+
   const handleLogout = () => {
     logout();
     setProfileOpen(false);
@@ -44,6 +90,9 @@ export default function Navbar() {
     'relative text-sm font-medium transition-colors duration-200 py-1';
   const activeClass = 'text-green-300';
   const inactiveClass = 'text-white/80 hover:text-white';
+  const unreadBadgeClass = supportUnread > 0
+    ? 'bg-red-500 text-white'
+    : 'bg-white/20 text-white/80';
 
   return (
     <motion.nav
@@ -75,13 +124,21 @@ export default function Navbar() {
               { path: '/search', label: t.nav.search },
               { path: '/browse', label: t.nav.browse },
               { path: '/about', label: 'About' },
+              ...(isAuthenticated ? [{ path: '/support', label: t.nav.support, unread: supportUnread }] : []),
             ].map(({ path, label }) => (
               <Link
                 key={path}
                 to={path}
                 className={`${navLink} ${isActive(path) ? activeClass : inactiveClass} px-3 py-2 rounded-lg hover:bg-white/10`}
               >
-                {label}
+                <span className="inline-flex items-center gap-2">
+                  <span>{label}</span>
+                  {path === '/support' && (
+                    <span className={`inline-flex min-w-5 h-5 px-1.5 items-center justify-center rounded-full text-[10px] font-bold ${unreadBadgeClass}`}>
+                      {supportUnread > 99 ? '99+' : supportUnread}
+                    </span>
+                  )}
+                </span>
                 {isActive(path) && (
                   <motion.span
                     layoutId="nav-indicator"
@@ -234,6 +291,7 @@ export default function Navbar() {
                 { path: '/search', label: t.nav.search },
                 { path: '/browse', label: t.nav.browse },
                 { path: '/about', label: 'About' },
+                ...(isAuthenticated ? [{ path: '/support', label: t.nav.support, unread: supportUnread }] : []),
               ].map(({ path, label }) => (
                 <Link
                   key={path}
@@ -242,7 +300,14 @@ export default function Navbar() {
                     isActive(path) ? 'bg-white/15 text-green-300' : 'text-white/80 hover:bg-white/10 hover:text-white'
                   }`}
                 >
-                  {label}
+                  <span className="inline-flex items-center gap-2">
+                    <span>{label}</span>
+                    {path === '/support' && (
+                      <span className={`inline-flex min-w-5 h-5 px-1.5 items-center justify-center rounded-full text-[10px] font-bold ${unreadBadgeClass}`}>
+                        {supportUnread > 99 ? '99+' : supportUnread}
+                      </span>
+                    )}
+                  </span>
                 </Link>
               ))}
               {isAdmin && (
