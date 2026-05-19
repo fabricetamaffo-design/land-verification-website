@@ -131,7 +131,7 @@ export async function deactivateLand(req: AuthRequest, res: Response): Promise<v
   await prisma.landParcel.update({ where: { id }, data: { isActive: false } });
 
   await prisma.auditLog.create({
-    data: { landId: id, userId: adminId, action: 'DEACTIVATE', changes: null },
+    data: { landId: id, userId: adminId, action: 'DEACTIVATE' },
   });
 
   res.json({ message: 'Land record deactivated successfully.' });
