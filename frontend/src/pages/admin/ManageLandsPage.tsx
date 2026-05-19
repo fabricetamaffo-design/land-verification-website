@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { adminGetAllLands, adminDeactivateLand } from '../../services/land.service';
 import { LandParcel } from '../../types';
 import StatusBadge from '../../components/StatusBadge';
@@ -8,6 +8,7 @@ export default function ManageLandsPage() {
   const [lands, setLands] = useState<LandParcel[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+  const navigate = useNavigate();
 
   const fetchLands = () => {
     adminGetAllLands().then((data) => setLands(data.lands)).finally(() => setLoading(false));
@@ -66,8 +67,7 @@ export default function ManageLandsPage() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-5 py-3 text-left">Title Number</th>
-                  <th className="px-5 py-3 text-left">Owner</th>
+                  <th className="px-5 py-3 text-left">Title / Owner</th>
                   <th className="px-5 py-3 text-left">Quarter</th>
                   <th className="px-5 py-3 text-left">Area (m²)</th>
                   <th className="px-5 py-3 text-left">Status</th>
@@ -77,28 +77,35 @@ export default function ManageLandsPage() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filtered.map((land) => (
-                  <tr key={land.id} className={`hover:bg-gray-50 ${!land.isActive ? 'opacity-50' : ''}`}>
-                    <td className="px-5 py-4 font-medium text-gray-900">{land.titleNumber}</td>
-                    <td className="px-5 py-4 text-gray-600">{land.ownerName}</td>
+                  <tr
+                    key={land.id}
+                    onClick={() => navigate(`/lands/${land.id}`)}
+                    className={`cursor-pointer hover:bg-green-50 hover:shadow-sm transition-all duration-150 ${!land.isActive ? 'opacity-50' : ''}`}
+                  >
+                    <td className="px-5 py-4">
+                      <p className="font-bold text-gray-900 hover:text-green-700 transition-colors">{land.titleNumber}</p>
+                      <p className="text-[11px] text-gray-400 mt-0.5">{land.ownerName}</p>
+                    </td>
                     <td className="px-5 py-4 text-gray-600">{land.quarter}</td>
                     <td className="px-5 py-4 text-gray-600">{land.areaSqm.toLocaleString()}</td>
-                    <td className="px-5 py-4"><StatusBadge status={land.status} /></td>
+                    <td className="px-5 py-4"><StatusBadge status={land.status} compact /></td>
                     <td className="px-5 py-4">
                       <span className={`text-xs px-2 py-1 rounded-full font-medium ${land.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
                         {land.isActive ? 'Active' : 'Deactivated'}
                       </span>
                     </td>
-                    <td className="px-5 py-4 flex items-center gap-3">
-                      <Link to={`/admin/edit/${land.id}`} className="text-green-700 hover:underline text-xs font-medium">Edit</Link>
-                      <Link to={`/lands/${land.id}`} className="text-gray-500 hover:underline text-xs">View</Link>
-                      {land.isActive && (
-                        <button
-                          onClick={() => handleDeactivate(land.id, land.titleNumber)}
-                          className="text-red-500 hover:underline text-xs"
-                        >
-                          Deactivate
-                        </button>
-                      )}
+                    <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center gap-3">
+                        <Link to={`/admin/edit/${land.id}`} className="text-green-700 hover:underline text-xs font-medium">Edit</Link>
+                        {land.isActive && (
+                          <button
+                            onClick={() => handleDeactivate(land.id, land.titleNumber)}
+                            className="text-red-500 hover:underline text-xs"
+                          >
+                            Deactivate
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

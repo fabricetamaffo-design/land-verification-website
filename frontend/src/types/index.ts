@@ -1,5 +1,7 @@
 export type Role = 'USER' | 'ADMIN';
 export type LandStatus = 'VALID' | 'SUSPICIOUS' | 'DUPLICATE';
+export type LandUseType = 'RESIDENTIAL' | 'COMMERCIAL' | 'AGRICULTURAL' | 'MIXED' | 'INDUSTRIAL';
+export type OwnershipType = 'ORIGINAL' | 'PURCHASE' | 'INHERITANCE' | 'DONATION' | 'COURT_ORDER';
 
 export interface User {
   id: string;
@@ -15,6 +17,15 @@ export interface LandDocument {
   uploadedAt: string;
 }
 
+export interface OwnershipRecord {
+  id: string;
+  ownerName: string;
+  ownershipType: OwnershipType;
+  fromYear: number;
+  toYear: number | null;
+  notes: string | null;
+}
+
 export interface LandParcel {
   id: string;
   titleNumber: string;
@@ -26,10 +37,13 @@ export interface LandParcel {
   status: LandStatus;
   notes: string | null;
   isActive: boolean;
+  titleApprovedYear: number | null;
+  landUseType: string;
   createdAt: string;
   updatedAt: string;
   documents?: LandDocument[];
   uploadedBy?: { id: string; name: string };
+  ownershipHistory?: OwnershipRecord[];
 }
 
 export interface SearchResult {
@@ -39,8 +53,11 @@ export interface SearchResult {
   quarter: string;
   areaSqm: number;
   status: LandStatus;
+  notes: string | null;
   gpsLat: number;
   gpsLng: number;
+  titleApprovedYear: number | null;
+  landUseType: string;
   createdAt: string;
 }
 
@@ -48,4 +65,46 @@ export interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+}
+
+export type SupportThreadStatus = 'OPEN' | 'CLOSED';
+
+export interface SupportThread {
+  id: string;
+  userId: string;
+  status: SupportThreadStatus;
+  lastMessageAt: string;
+  createdAt: string;
+}
+
+export interface SupportThreadUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface AdminSupportThreadListItem extends SupportThread {
+  user: SupportThreadUser;
+  _count: { messages: number };
+  unreadCount: number;
+}
+
+export interface AdminSupportThreadDetail {
+  id: string;
+  userId: string;
+  status: SupportThreadStatus;
+  lastMessageAt: string;
+  user: SupportThreadUser;
+}
+
+export interface SupportMessage {
+  id: string;
+  body: string | null;
+  createdAt: string;
+  senderId: string;
+  sender?: { id: string; name: string; role: Role };
+  attachmentName: string | null;
+  attachmentPath: string | null;
+  attachmentMime: string | null;
+  thread?: { id: string; userId: string };
 }

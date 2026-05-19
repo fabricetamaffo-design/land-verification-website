@@ -19,6 +19,8 @@ model User {
 
   uploadedLands LandParcel[] @relation("UploadedBy")
   auditLogs     AuditLog[]
+  supportThread   SupportThread?   @relation("UserSupportThread")
+  supportMessages SupportMessage[] @relation("UserSupportMessages")
 
   @@map("users")
 }
@@ -29,24 +31,27 @@ enum Role {
 }
 
 model LandParcel {
-  id          String     @id @default(uuid())
-  titleNumber String     @unique @map("title_number")
-  ownerName   String     @map("owner_name")
-  quarter     String
-  areaSqm     Float      @map("area_sqm")
-  gpsLat      Float      @map("gps_lat")
-  gpsLng      Float      @map("gps_lng")
-  status      LandStatus @default(VALID)
-  notes       String?
-  isActive    Boolean    @default(true) @map("is_active")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
+  id                String     @id @default(uuid())
+  titleNumber       String     @unique @map("title_number")
+  ownerName         String     @map("owner_name")
+  quarter           String
+  areaSqm           Float      @map("area_sqm")
+  gpsLat            Float      @map("gps_lat")
+  gpsLng            Float      @map("gps_lng")
+  status            LandStatus @default(VALID)
+  notes             String?
+  isActive          Boolean    @default(true) @map("is_active")
+  titleApprovedYear Int?       @map("title_approved_year")
+  landUseType       String     @default("RESIDENTIAL") @map("land_use_type")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
 
   uploadedById String @map("uploaded_by_id")
   uploadedBy   User   @relation("UploadedBy", fields: [uploadedById], references: [id])
 
-  documents LandDocument[]
-  auditLogs AuditLog[]
+  documents        LandDocument[]
+  auditLogs        AuditLog[]
+  ownershipHistory OwnershipRecord[]
 
   @@map("land_parcels")
 }
@@ -55,6 +60,21 @@ enum LandStatus {
   VALID
   SUSPICIOUS
   DUPLICATE
+}
+
+model OwnershipRecord {
+  id            String   @id @default(uuid())
+  landId        String   @map("land_id")
+  ownerName     String   @map("owner_name")
+  ownershipType String   @default("PURCHASE") @map("ownership_type")
+  fromYear      Int      @map("from_year")
+  toYear        Int?     @map("to_year")
+  notes         String?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  land LandParcel @relation(fields: [landId], references: [id], onDelete: Cascade)
+
+  @@map("ownership_records")
 }
 
 model LandDocument {
@@ -81,4 +101,42 @@ model AuditLog {
   user User       @relation(fields: [userId], references: [id])
 
   @@map("audit_logs")
+}
+
+enum SupportThreadStatus {
+  OPEN
+  CLOSED
+}
+
+model SupportThread {
+  id            String              @id @default(uuid())
+  userId        String              @unique @map("user_id")
+  status        SupportThreadStatus @default(OPEN)
+  lastMessageAt DateTime            @default(now()) @map("last_message_at")
+  userLastReadAt DateTime           @default(now()) @map("user_last_read_at")
+  adminLastReadAt DateTime          @default(now()) @map("admin_last_read_at")
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime            @updatedAt @map("updated_at")
+
+  user     User             @relation("UserSupportThread", fields: [userId], references: [id], onDelete: Cascade)
+  messages SupportMessage[]
+
+  @@map("support_threads")
+}
+
+model SupportMessage {
+  id              String   @id @default(uuid())
+  threadId        String   @map("thread_id")
+  senderId        String   @map("sender_id")
+  body            String?  @db.Text
+  attachmentName  String?  @map("attachment_name")
+  attachmentPath  String?  @map("attachment_path")
+  attachmentMime  String?  @map("attachment_mime")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  thread SupportThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  sender User          @relation("UserSupportMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, createdAt])
+  @@map("support_messages")
 }
