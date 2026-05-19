@@ -149,6 +149,11 @@ export const en = {
     reset: 'Reset',
     parcelsFound: 'parcel(s) found',
     noResults: 'No land parcels found for the selected filters.',
+    loadMore: 'Load More',
+    noMore: 'No more parcels to load.',
+    sortBy: 'Sort by',
+    sortNewest: 'Newest First',
+    sortOldest: 'Oldest First',
   },
   landDetail: {
     back: '← Back to Search',
