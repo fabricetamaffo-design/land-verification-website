@@ -2,11 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { SearchResult } from '../types';
-import StatusBadge from './StatusBadge';
+import StatusBadge, { isValid } from './StatusBadge';
 import { useLang } from '../context/LanguageContext';
+
+const LAND_USE_ICONS: Record<string, string> = {
+  RESIDENTIAL: '🏠', COMMERCIAL: '🏢', AGRICULTURAL: '🌾', MIXED: '🏙️', INDUSTRIAL: '🏭',
+};
+
+const LAND_USE_LABELS: Record<string, string> = {
+  RESIDENTIAL: 'Residential', COMMERCIAL: 'Commercial',
+  AGRICULTURAL: 'Agricultural', MIXED: 'Mixed Use', INDUSTRIAL: 'Industrial',
+};
 
 export default function LandCard({ land, index = 0 }: { land: SearchResult; index?: number }) {
   const { t } = useLang();
+  const valid = isValid(land.status);
 
   return (
     <motion.div
@@ -19,26 +29,19 @@ export default function LandCard({ land, index = 0 }: { land: SearchResult; inde
         className="block bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-green-200 hover:-translate-y-1 transition-all duration-300 overflow-hidden group"
       >
         {/* Top accent bar */}
-        <div
-          className={`h-1.5 w-full ${
-            land.status === 'VALID'
-              ? 'bg-gradient-to-r from-emerald-400 to-green-500'
-              : land.status === 'SUSPICIOUS'
-              ? 'bg-gradient-to-r from-amber-400 to-orange-500'
-              : 'bg-gradient-to-r from-red-400 to-rose-500'
-          }`}
-        />
+        <div className={`h-1.5 w-full ${valid ? 'bg-gradient-to-r from-emerald-400 to-green-500' : 'bg-gradient-to-r from-red-400 to-rose-500'}`} />
 
         <div className="p-5">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-1">{t.landCard.titleNumber}</p>
-              <p className="text-lg font-bold text-gray-900 group-hover:text-green-700 transition-colors">
-                {land.titleNumber}
-              </p>
+              <p className="text-lg font-bold text-gray-900 group-hover:text-green-700 transition-colors">{land.titleNumber}</p>
+              {land.titleApprovedYear && (
+                <p className="text-[10px] text-gray-400 mt-0.5">Approved: {land.titleApprovedYear}</p>
+              )}
             </div>
-            <StatusBadge status={land.status} />
+            <StatusBadge status={land.status} notes={land.notes} />
           </div>
 
           {/* Details Grid */}
@@ -58,12 +61,9 @@ export default function LandCard({ land, index = 0 }: { land: SearchResult; inde
 
           {/* Footer */}
           <div className="mt-4 flex items-center justify-between">
-            <div className="flex items-center space-x-1 text-gray-400">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span className="text-[10px] font-medium">{land.gpsLat.toFixed(4)}, {land.gpsLng.toFixed(4)}</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-base">{LAND_USE_ICONS[land.landUseType] || '🏘️'}</span>
+              <span className="text-[10px] text-gray-400 font-medium">{LAND_USE_LABELS[land.landUseType] || land.landUseType}</span>
             </div>
             <span className="text-xs text-green-600 font-semibold group-hover:text-green-500 transition-colors">
               {t.landCard.viewDetails}

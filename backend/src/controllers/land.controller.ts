@@ -4,24 +4,18 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function searchLands(req: Request, res: Response): Promise<void> {
-  const { q, quarter } = req.query as { q?: string; quarter?: string };
+  const { q } = req.query as { q?: string };
 
-  const where: Record<string, unknown> = { isActive: true };
-
-  if (quarter) {
-    where.quarter = { equals: quarter, mode: 'insensitive' };
-  }
-
-  if (q) {
-    where.OR = [
-      { titleNumber: { contains: q, mode: 'insensitive' } },
-      { ownerName: { contains: q, mode: 'insensitive' } },
-      { id: { contains: q, mode: 'insensitive' } },
-    ];
+  if (!q || q.trim().length < 2) {
+    res.json({ results: [], count: 0 });
+    return;
   }
 
   const lands = await prisma.landParcel.findMany({
-    where,
+    where: {
+      isActive: true,
+      titleNumber: { contains: q.trim(), mode: 'insensitive' },
+    },
     orderBy: { createdAt: 'desc' },
     select: {
       id: true,
@@ -30,8 +24,11 @@ export async function searchLands(req: Request, res: Response): Promise<void> {
       quarter: true,
       areaSqm: true,
       status: true,
+      notes: true,
       gpsLat: true,
       gpsLng: true,
+      titleApprovedYear: true,
+      landUseType: true,
       createdAt: true,
     },
   });
@@ -47,6 +44,10 @@ export async function getLandById(req: Request, res: Response): Promise<void> {
     include: {
       documents: { select: { id: true, fileName: true, filePath: true, uploadedAt: true } },
       uploadedBy: { select: { id: true, name: true } },
+      ownershipHistory: {
+        orderBy: { fromYear: 'asc' },
+        select: { id: true, ownerName: true, ownershipType: true, fromYear: true, toYear: true, notes: true },
+      },
     },
   });
 
@@ -56,6 +57,34 @@ export async function getLandById(req: Request, res: Response): Promise<void> {
   }
 
   res.json({ land });
+}
+
+export async function browseLands(req: Request, res: Response): Promise<void> {
+  const { quarter } = req.query as { quarter?: string };
+
+  const lands = await prisma.landParcel.findMany({
+    where: {
+      isActive: true,
+      ...(quarter ? { quarter: { equals: quarter, mode: 'insensitive' } } : {}),
+    },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      titleNumber: true,
+      ownerName: true,
+      quarter: true,
+      areaSqm: true,
+      status: true,
+      notes: true,
+      gpsLat: true,
+      gpsLng: true,
+      titleApprovedYear: true,
+      landUseType: true,
+      createdAt: true,
+    },
+  });
+
+  res.json({ results: lands, count: lands.length });
 }
 
 export async function getQuarters(req: Request, res: Response): Promise<void> {
