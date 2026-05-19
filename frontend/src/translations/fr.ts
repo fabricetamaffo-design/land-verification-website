@@ -151,6 +151,11 @@ export const fr: Translations = {
     reset: 'Réinitialiser',
     parcelsFound: 'parcelle(s) trouvée(s)',
     noResults: 'Aucune parcelle trouvée pour les filtres sélectionnés.',
+    loadMore: 'Charger Plus',
+    noMore: 'Plus de parcelles à charger.',
+    sortBy: 'Trier par',
+    sortNewest: 'Plus Récent',
+    sortOldest: 'Plus Ancien',
   },
   landDetail: {
     back: '← Retour à la Recherche',
