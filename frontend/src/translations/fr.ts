@@ -211,6 +211,13 @@ export const fr: Translations = {
     privacyPolicy: 'Politique de Confidentialité',
     terms: "Conditions d'Utilisation",
   },
+  map: {
+    tooltip: 'Cliquez pour voir les détails de la parcelle',
+    loading: 'Chargement de la carte…',
+    noLocation: "Emplacement non disponible pour cette parcelle.",
+    zoomHint: 'Utilisez la molette pour zoomer',
+    markerLabel: 'Emplacement de la parcelle',
+  },
   notFound: {
     title: 'Page Introuvable',
     subtitle: "La page que vous recherchez n'existe pas ou a été déplacée.",

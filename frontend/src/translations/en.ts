@@ -209,6 +209,13 @@ export const en = {
     privacyPolicy: 'Privacy Policy',
     terms: 'Terms of Use',
   },
+  map: {
+    tooltip: 'Click to view parcel details',
+    loading: 'Loading map…',
+    noLocation: 'Location not available for this parcel.',
+    zoomHint: 'Use scroll wheel to zoom in/out',
+    markerLabel: 'Land parcel location',
+  },
   notFound: {
     title: 'Page Not Found',
     subtitle: "The page you're looking for doesn't exist or has been moved.",
