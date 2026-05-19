@@ -90,6 +90,8 @@ Frontend runs on `http://localhost:5173`
 | FR-08 | Land Record Management (edit / deactivate) |
 | FR-09 | Role-Based Access Control |
 | FR-10 | Browse Lands by Quarter |
+| FR-11 | Document Upload (Admin attaches supporting files to a land record) |
+| FR-12 | Ownership Chain History (Admin records full chain of past owners) |
 
 ---
 
@@ -109,3 +111,16 @@ Frontend runs on `http://localhost:5173`
 - `PUT /api/admin/lands/:id` — Edit land record
 - `PATCH /api/admin/lands/:id/deactivate` — Deactivate land record
 - `GET /api/admin/users` — List all users
+
+---
+
+## Environment Variables
+
+| Variable | Description | Example |
+|---|---|---|
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@localhost:5432/db` |
+| `JWT_SECRET` | Secret key for signing JWT tokens | `change-me-in-production` |
+| `JWT_EXPIRES_IN` | Token expiry duration | `7d` |
+| `PORT` | Backend server port | `5000` |
+| `NODE_ENV` | Runtime environment | `development` or `production` |
+| `FRONTEND_URL` | Allowed CORS origin | `http://localhost:5173` |
