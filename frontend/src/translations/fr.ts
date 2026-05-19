@@ -196,6 +196,12 @@ export const fr: Translations = {
     showing: 'Affichage',
     of: 'sur',
     viewAll: 'Voir tout',
+    deleteRecord: "Supprimer l'enregistrement",
+    confirmDelete: "Êtes-vous sûr de vouloir supprimer cet enregistrement ? Cette action est irréversible.",
+    deactivate: 'Désactiver',
+    activate: 'Activer',
+    filterByStatus: 'Filtrer par Statut',
+    allStatuses: 'Tous les Statuts',
   },
   footer: {
     tagline: 'Plateforme sécurisée et centralisée de vérification foncière pour le Cameroun. Éliminons la fraude, un titre à la fois.',
