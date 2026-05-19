@@ -6,6 +6,7 @@ export const fr: Translations = {
     search: 'Rechercher',
     browse: 'Parcourir',
     admin: 'Panneau Admin',
+    support: 'Support',
     login: 'Connexion',
     register: "S'inscrire",
     logout: 'Déconnexion',
