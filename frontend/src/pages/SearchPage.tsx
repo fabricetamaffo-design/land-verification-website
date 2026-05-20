@@ -56,10 +56,29 @@ export default function SearchPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50/30 pt-24 pb-16">
       {/* Search header */}
       <div className="bg-white border-b border-gray-100 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-8">
+          {query && (
+            <motion.div
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-100 rounded-xl px-4 py-3 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <span className="text-green-600 font-bold">AI Insight:</span>
+                Searching for
+                <span className="font-mono text-gray-800 bg-white px-2 py-1 rounded">
+                  {query}
+                </span>
+              </div>
+              
+              <div className="text-xs text-gray-400">
+                Secure land registry query
+              </div>
+            </motion.div>
+          )}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-3xl font-black text-gray-900 mb-1">{t.search.title}</h1>
             <p className="text-gray-400 text-sm mb-6">{t.search.subtitle}</p>
@@ -76,7 +95,7 @@ export default function SearchPage() {
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t.search.placeholder}
+                  placeholder="e.g. TF-001-YAOUNDE or TF-245-DLA..."
                   className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all font-mono"
                 />
               </div>
@@ -137,7 +156,7 @@ export default function SearchPage() {
                 <motion.div
                   initial={{ scale: 0.95 }}
                   animate={{ scale: 1 }}
-                  className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm"
+                  className="text-center py-20 bg-gradient-to-br from-white to-gray-50 rounded-3xl border border-gray-100 shadow-xl"
                 >
                   <div className="text-5xl mb-4 float-anim inline-block">🔍</div>
                   <h3 className="text-gray-700 font-bold text-base mb-2">{t.search.noResults}</h3>
@@ -145,7 +164,16 @@ export default function SearchPage() {
                 </motion.div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {results.map((land, i) => <LandCard key={land.id} land={land} index={i} />)}
+                  {results.map((land, i) => (
+                    <motion.div
+                      key={land.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                    >
+                      <LandCard land={land} index={i} />
+                    </motion.div>
+                  ))}
                 </div>
               )}
             </motion.div>
@@ -158,10 +186,18 @@ export default function SearchPage() {
               animate={{ opacity: 1 }}
               className="text-center py-20 bg-white rounded-2xl border border-dashed border-green-200"
             >
-              <div className="text-6xl mb-5 float-anim inline-block">🔐</div>
-              <h3 className="text-gray-700 font-semibold text-base mb-2">Enter a Land Title Number</h3>
-              <p className="text-gray-400 text-sm max-w-xs mx-auto">
-                Type the exact title number of the land parcel you want to verify (e.g. TF-001-YAOUNDE).
+              <div className="relative mb-6">
+                <div className="text-6xl float-anim inline-block">🔐</div>
+                <div className="absolute -top-2 -right-2 w-3 h-3 bg-green-500 rounded-full animate-ping" />
+              </div>
+              
+              <h3 className="text-gray-800 font-bold text-lg mb-2">
+                Secure Land Verification System
+              </h3>
+              
+              <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
+                Enter a valid land title number to access verified cadastral records
+                from the national registry database.
               </p>
             </motion.div>
           )}
