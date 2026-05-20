@@ -124,6 +124,28 @@ export default function BrowsePage() {
 
         {/* Count line */}
         <AnimatePresence mode="wait">
+          <motion.div
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-3 bg-white border border-gray-100 rounded-xl px-4 py-3 flex items-center justify-between shadow-sm"
+          >
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <span className="font-bold text-green-600">Context:</span>
+              
+              {quarter === 'All' ? (
+                <span>Browsing all available land samples</span>
+              ) : (
+                <span>
+                  Filtered by <span className="font-semibold text-gray-800">{quarter}</span>
+                </span>
+              )}
+            </div>
+            
+            <div className="text-xs text-gray-400">
+              Secure dataset preview
+            </div>
+          </motion.div>
+
           <motion.p
             key={quarter}
             initial={{ opacity: 0 }}
@@ -149,10 +171,18 @@ export default function BrowsePage() {
               key={land.id}
               custom={i}
               variants={cardVariants}
-              className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 select-none"
+              className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm transition-all duration-300 select-none hover:shadow-xl hover:-translate-y-1 hover:border-green-200 group"
             >
               {/* Status colour bar */}
-              <div className={`h-1.5 w-full ${land.status === 'VALID' ? 'bg-gradient-to-r from-emerald-400 to-green-500' : 'bg-gradient-to-r from-red-400 to-rose-500'}`} />
+              <div
+                className={`h-1.5 w-full relative overflow-hidden ${
+                  land.status === 'VALID'
+                    ? 'bg-gradient-to-r from-emerald-400 to-green-500'
+                    : 'bg-gradient-to-r from-red-400 to-rose-500'
+                }`}
+              >
+                <div className="absolute inset-0 opacity-30 animate-pulse bg-white" />
+              </div>
 
               <div className="p-5">
                 {/* Header row */}
@@ -205,6 +235,23 @@ export default function BrowsePage() {
                   </Link>
                 </div>
               </div>
+              
+              {filtered.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="col-span-full text-center py-16 bg-white rounded-2xl border border-dashed border-gray-200"
+                >
+                  <div className="text-5xl mb-3">📍</div>
+                  <h3 className="text-gray-700 font-bold mb-2">
+                    No land records found
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Try selecting another quarter or remove filters.
+                  </p>
+                </motion.div>
+              )}
+
             </motion.div>
           ))}
         </motion.div>

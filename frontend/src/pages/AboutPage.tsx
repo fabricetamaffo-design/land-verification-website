@@ -258,6 +258,57 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ══════════════════════════════════════PLATFORM STATS══════════════════════════════════════ */}
+      <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-green-950 to-black relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-green-500 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-10 w-72 h-72 bg-emerald-400 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <Section>
+            <motion.div variants={fadeUp} className="text-center mb-14">
+              <p className="text-green-400 text-xs font-bold uppercase tracking-widest mb-3">
+                Platform Impact
+              </p>
+              
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+                Building Trust Through Technology
+              </h2>
+              
+              <p className="text-gray-300 max-w-2xl mx-auto">
+                LandVerifyCM combines digital verification, secure records,
+                and transparent access to fight land fraud in Cameroon.
+              </p>
+            </motion.div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {[
+                { value: '12K+', label: 'Verified Parcels' },
+                { value: '98%', label: 'Fraud Detection Accuracy' },
+                { value: '10', label: 'Regions Covered' },
+                { value: '24/7', label: 'Platform Availability' },
+              ].map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  variants={fadeUp}
+                  custom={i}
+                  className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 text-center hover:-translate-y-2 hover:border-green-400/30 transition-all duration-300"
+                >
+                  <h3 className="text-4xl font-black text-green-400 mb-2">
+                    {stat.value}
+                  </h3>
+                  
+                  <p className="text-gray-300 text-sm font-medium">
+                    {stat.label}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </Section>
+        </div>
+      </section>
+
       {/* ══════════════════════════════════════
           CTA
       ══════════════════════════════════════ */}
