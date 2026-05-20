@@ -72,6 +72,20 @@ export default function LoginPage() {
             </div>
             <h1 className="text-3xl font-black text-gray-900">{t.login.title}</h1>
             <p className="text-gray-400 text-sm mt-1">{t.login.subtitle}</p>
+            <div className="flex flex-wrap gap-2 mt-3">
+              {[
+                '🔐 Secure authentication',
+                '🛡️ Encrypted session',
+                '🏛️ Verified land system'
+              ].map((item) => (
+                <span
+                  key={item}
+                  className="text-[11px] px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-100"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -136,7 +150,20 @@ export default function LoginPage() {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
               )}
-              {loading ? t.login.loading : t.login.btn}
+              {/* {loading ? t.login.loading : t.login.btn} */}
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  <span>
+                    {['Authenticating...', 'Verifying credentials...', 'Securing session...'][Math.floor(Date.now() / 900) % 3]}
+                  </span>
+                </div>
+              ) : (
+                t.login.btn
+              )}
             </motion.button>
           </form>
 
