@@ -202,9 +202,9 @@ export default function LandDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
                 <div>
-                  <p className="font-bold text-sm">Why is this land Not Valid?</p>
+                  <p className="font-bold text-sm">{t.landDetail.whyNotValid}</p>
                   <p className="text-sm mt-0.5">{notValidReason}</p>
-                  <p className="text-xs mt-1 text-red-600 font-medium">We strongly advise against proceeding with a transaction on this parcel.</p>
+                  <p className="text-xs mt-1 text-red-600 font-medium">{t.landDetail.stronglyAdvise}</p>
                 </div>
               </motion.div>
             )}
@@ -212,10 +212,10 @@ export default function LandDetailPage() {
             {/* Buyer summary bar */}
             <div className="px-8 py-4 bg-gray-50 border-b border-gray-100 flex flex-wrap gap-4 text-xs">
               {[
-                { icon: '🏘️', label: 'Quarter', value: land.quarter },
-                { icon: '📐', label: 'Area', value: `${land.areaSqm.toLocaleString()} m²` },
-                { icon: '👤', label: 'Owners', value: `${ownershipCount} recorded` },
-                { icon: '📅', label: 'Registered', value: new Date(land.createdAt).getFullYear().toString() },
+                { icon: '🏘️', label: t.landDetail.quarter, value: land.quarter },
+                { icon: '📐', label: t.landDetail.area, value: `${land.areaSqm.toLocaleString()} m²` },
+                { icon: '👤', label: t.landDetail.owners, value: `${ownershipCount} ${t.landDetail.recorded}` },
+                { icon: '📅', label: t.landDetail.dateRegistered, value: new Date(land.createdAt).getFullYear().toString() },
               ].map(({ icon, label, value }) => (
                 <div key={label} className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-gray-200">
                   <span>{icon}</span>
@@ -233,11 +233,11 @@ export default function LandDetailPage() {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                 <DetailRow label={t.landDetail.titleNumber} value={land.titleNumber} highlight />
-                <DetailRow label="Current Owner" value={currentOwner?.ownerName || land.ownerName} highlight />
+                <DetailRow label={t.landDetail.currentOwner} value={currentOwner?.ownerName || land.ownerName} highlight />
                 <DetailRow label={t.landDetail.quarter} value={land.quarter} />
                 <DetailRow label={t.landDetail.area} value={`${land.areaSqm.toLocaleString()} m²`} />
-                <DetailRow label="Land Use Type" value={`${LAND_USE_ICONS[land.landUseType] || ''} ${LAND_USE_LABELS[land.landUseType] || land.landUseType}`} />
-                <DetailRow label="Title Approved Year" value={land.titleApprovedYear ? land.titleApprovedYear.toString() : 'Not specified'} />
+                <DetailRow label={t.landDetail.landUseType} value={`${LAND_USE_ICONS[land.landUseType] || ''} ${LAND_USE_LABELS[land.landUseType] || land.landUseType}`} />
+                <DetailRow label={t.landDetail.titleApprovedYear} value={land.titleApprovedYear ? land.titleApprovedYear.toString() : t.landDetail.notSpecified} />
                 <DetailRow label={t.landDetail.registeredBy} value={land.uploadedBy?.name || '—'} />
                 <DetailRow label={t.landDetail.dateRegistered} value={new Date(land.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} />
                 <DetailRow label={t.landDetail.gpsLat} value={land.gpsLat.toFixed(6)} />
@@ -247,12 +247,10 @@ export default function LandDetailPage() {
               {/* Verification status summary */}
               <div className={`rounded-xl p-4 mb-8 border ${valid ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
                 <p className={`font-bold text-sm mb-1 ${valid ? 'text-emerald-800' : 'text-red-800'}`}>
-                  {valid ? '✓ This land parcel is Verified Valid' : '✕ This land parcel is Not Valid'}
+                  {valid ? `✓ ${t.landDetail.verifiedValid}` : `✕ ${t.landDetail.notValidTitle}`}
                 </p>
                 <p className={`text-xs ${valid ? 'text-emerald-700' : 'text-red-700'}`}>
-                  {valid
-                    ? 'No title conflicts or GPS overlaps detected. The title number is unique in the registry.'
-                    : notValidReason}
+                  {valid ? t.landDetail.noConflicts : notValidReason}
                 </p>
               </div>
             </div>
@@ -330,13 +328,13 @@ export default function LandDetailPage() {
               <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5">
                 <h3 className="font-bold text-blue-900 text-sm mb-2 flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  Buyer Advice
+                  {t.landDetail.buyerAdviceTitle}
                 </h3>
                 <ul className="text-xs text-blue-800 space-y-1.5">
-                  <li className="flex items-start gap-1.5"><span className="text-blue-500 font-bold mt-0.5">→</span> Always verify the ownership history matches what the seller claims.</li>
-                  <li className="flex items-start gap-1.5"><span className="text-blue-500 font-bold mt-0.5">→</span> Confirm the GPS location on-site before signing any document.</li>
-                  <li className="flex items-start gap-1.5"><span className="text-blue-500 font-bold mt-0.5">→</span> Request original title documents and cross-check with this registry.</li>
-                  {!valid && <li className="flex items-start gap-1.5 text-red-700 font-semibold"><span className="text-red-500 font-bold mt-0.5">⚠</span> This parcel has a Not Valid status — do NOT proceed without legal counsel.</li>}
+                  <li className="flex items-start gap-1.5"><span className="text-blue-500 font-bold mt-0.5">→</span> {t.landDetail.buyerAdvice1}</li>
+                  <li className="flex items-start gap-1.5"><span className="text-blue-500 font-bold mt-0.5">→</span> {t.landDetail.buyerAdvice2}</li>
+                  <li className="flex items-start gap-1.5"><span className="text-blue-500 font-bold mt-0.5">→</span> {t.landDetail.buyerAdvice3}</li>
+                  {!valid && <li className="flex items-start gap-1.5 text-red-700 font-semibold"><span className="text-red-500 font-bold mt-0.5">⚠</span> {t.landDetail.buyerAdvice4}</li>}
                 </ul>
               </div>
             </div>
