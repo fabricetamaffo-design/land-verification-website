@@ -3,27 +3,27 @@ import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { useLang } from '../context/LanguageContext';
 
-const team = [
-  { name: 'Tamaffo Fabrice',  role: 'Project Manager · Backend · Database', initials: 'TF', gradient: 'from-green-500 to-emerald-400',  ring: 'ring-green-400/40',  bg: 'bg-green-50',  border: 'border-green-200' },
-  { name: 'Kuate Messado',    role: 'Backend Developer',                     initials: 'KM', gradient: 'from-blue-500 to-indigo-400',   ring: 'ring-blue-400/40',   bg: 'bg-blue-50',   border: 'border-blue-200' },
-  { name: 'Nkam Titcha',      role: 'Frontend Developer · Database',         initials: 'NT', gradient: 'from-purple-500 to-violet-400', ring: 'ring-purple-400/40', bg: 'bg-purple-50', border: 'border-purple-200' },
-  { name: 'Kemgang Leprince', role: 'Frontend Developer · Backend',          initials: 'KL', gradient: 'from-amber-500 to-orange-400',  ring: 'ring-amber-400/40',  bg: 'bg-amber-50',  border: 'border-amber-200' },
-];
-
 const features = [
-  { icon: '🔍', title: 'Smart Search',        desc: 'Search by title number, parcel ID, or owner name across the full national registry.', gradient: 'from-blue-500 to-indigo-500',   bg: 'bg-blue-50',   border: 'border-blue-100',   text: 'text-blue-700' },
-  { icon: '🗺️', title: 'GPS Map View',        desc: 'Every land parcel is pinpointed on an interactive Leaflet map with satellite overlay.', gradient: 'from-green-500 to-emerald-500', bg: 'bg-green-50',  border: 'border-green-100',  text: 'text-green-700' },
-  { icon: '🛡️', title: 'Fraud Detection',     desc: 'Automated detection of duplicates and suspicious GPS overlaps before they cause harm.', gradient: 'from-red-500 to-rose-500',      bg: 'bg-red-50',    border: 'border-red-100',    text: 'text-red-700' },
-  { icon: '👤', title: 'Role-Based Access',   desc: 'Separate admin and user roles with protected routes and JWT authentication.',           gradient: 'from-purple-500 to-violet-500', bg: 'bg-purple-50', border: 'border-purple-100', text: 'text-purple-700' },
-  { icon: '📋', title: 'Document Upload',     desc: 'Admins can attach PDF or image documents to each land record as legal evidence.',       gradient: 'from-amber-500 to-orange-500',  bg: 'bg-amber-50',  border: 'border-amber-100',  text: 'text-amber-700' },
-  { icon: '🌍', title: 'Bilingual Platform',  desc: 'Full English and French language support — toggled instantly for all Cameroon users.',  gradient: 'from-teal-500 to-cyan-500',     bg: 'bg-teal-50',   border: 'border-teal-100',   text: 'text-teal-700' },
+  { icon: '🔍', title: 'Smart Search',       desc: 'Search by title number, parcel ID, or owner name across the full national registry.', gradient: 'from-blue-500 to-indigo-500',   bg: 'bg-blue-50',   border: 'border-blue-100',   text: 'text-blue-700' },
+  { icon: '🗺️', title: 'GPS Map View',       desc: 'Every land parcel is pinpointed on an interactive map with precise GPS coordinates.',  gradient: 'from-green-500 to-emerald-500', bg: 'bg-green-50',  border: 'border-green-100',  text: 'text-green-700' },
+  { icon: '🛡️', title: 'Fraud Detection',    desc: 'Automated detection of duplicate titles and suspicious GPS overlaps in real time.',    gradient: 'from-red-500 to-rose-500',      bg: 'bg-red-50',    border: 'border-red-100',    text: 'text-red-700' },
+  { icon: '🔐', title: 'Secure Access',      desc: 'Role-based access control with JWT authentication and encrypted data at rest.',        gradient: 'from-purple-500 to-violet-500', bg: 'bg-purple-50', border: 'border-purple-100', text: 'text-purple-700' },
+  { icon: '📋', title: 'Document Registry',  desc: 'Attach and retrieve official PDF and image documents tied to each land record.',       gradient: 'from-amber-500 to-orange-500',  bg: 'bg-amber-50',  border: 'border-amber-100',  text: 'text-amber-700' },
+  { icon: '🌍', title: 'Bilingual Platform', desc: 'Full English and French language support, toggled instantly for all users.',          gradient: 'from-teal-500 to-cyan-500',     bg: 'bg-teal-50',   border: 'border-teal-100',   text: 'text-teal-700' },
 ];
 
-const goals = [
-  { label: 'Eliminate Fraud',  icon: '🚫', gradient: 'from-red-500 to-rose-600',     bg: 'bg-red-600',    desc: 'Stop fraudulent title transfers before they happen.' },
-  { label: 'Protect Rights',   icon: '⚖️', gradient: 'from-blue-500 to-indigo-600',  bg: 'bg-blue-600',   desc: 'Ensure every citizen\'s land rights are on record.' },
-  { label: 'Build Trust',      icon: '🤝', gradient: 'from-green-500 to-emerald-600',bg: 'bg-green-600',  desc: 'Create a transparent, verified public registry.' },
-  { label: 'Digital Access',   icon: '💻', gradient: 'from-purple-500 to-violet-600',bg: 'bg-purple-600', desc: 'Make land information accessible to every Cameroonian.' },
+const values = [
+  { icon: '🔍', label: 'Transparency',  gradient: 'from-blue-500 to-indigo-600',   desc: 'Complete, auditable records accessible to every citizen.' },
+  { icon: '🛡️', label: 'Security',      gradient: 'from-red-500 to-rose-600',      desc: 'Bank-grade data protection and fraud prevention built in.' },
+  { icon: '⚡', label: 'Reliability',   gradient: 'from-amber-500 to-orange-600',  desc: '99.9% uptime with redundant infrastructure and backups.' },
+  { icon: '🤝', label: 'Accessibility', gradient: 'from-green-500 to-emerald-600', desc: 'Land information made available to every Cameroonian.' },
+];
+
+const stats = [
+  { value: '500+', label: 'Parcels Verified',  labelFr: 'Parcelles Vérifiées' },
+  { value: '99%',  label: 'Platform Uptime',   labelFr: 'Disponibilité Plateforme' },
+  { value: '3',    label: 'Fraud Levels',       labelFr: 'Niveaux de Fraude' },
+  { value: '24/7', label: 'Service Availability', labelFr: 'Disponibilité du Service' },
 ];
 
 const techStack = [
@@ -37,6 +37,7 @@ const techStack = [
   { name: 'PostgreSQL',    color: 'bg-indigo-100 text-indigo-800 border-indigo-300' },
   { name: 'Prisma ORM',    color: 'bg-teal-100 text-teal-800 border-teal-300' },
   { name: 'JWT Auth',      color: 'bg-amber-100 text-amber-800 border-amber-300' },
+  { name: 'Socket.io',     color: 'bg-gray-100 text-gray-700 border-gray-300' },
   { name: 'Leaflet.js',    color: 'bg-emerald-100 text-emerald-800 border-emerald-300' },
 ];
 
@@ -59,14 +60,12 @@ function Section({ children, className = '' }: { children: React.ReactNode; clas
 }
 
 export default function AboutPage() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
 
-      {/* ══════════════════════════════════════
-          HERO
-      ══════════════════════════════════════ */}
+      {/* ── HERO ── */}
       <section className="hero-gradient py-28 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '28px 28px' }}
@@ -78,51 +77,72 @@ export default function AboutPage() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-5 py-2 text-green-200 text-sm font-semibold mb-8">
               <div className="w-2 h-2 rounded-full bg-green-400 pulse-dot" />
-              PKFokam Institute of Excellence — Spring 2026
+              {t.about.authorityLabel}
             </span>
             <h1 className="text-5xl md:text-6xl font-black text-white mb-5 leading-tight">
               {t.about.title}
             </h1>
-            <p className="text-green-100/75 text-lg max-w-2xl mx-auto leading-relaxed">
+            <p className="text-green-100/80 text-lg max-w-2xl mx-auto leading-relaxed">
               {t.about.subtitle}
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          MISSION
-      ══════════════════════════════════════ */}
+      {/* ── STATS BAR ── */}
+      <section className="bg-white border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 py-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.value}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                className="text-center p-5 rounded-2xl bg-gray-50 border border-gray-100 hover:border-green-200 hover:bg-green-50/40 transition-all"
+              >
+                <p className="text-4xl font-black text-green-700 mb-1">{s.value}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                  {lang === 'fr' ? s.labelFr : s.label}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── MISSION ── */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <Section>
             <div className="grid md:grid-cols-2 gap-14 items-center">
               <motion.div variants={fadeUp}>
                 <p className="text-green-600 text-xs font-bold uppercase tracking-widest mb-2">{t.about.mission}</p>
-                <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-5 leading-tight">Why LandVerifyCM?</h2>
+                <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-5 leading-tight">
+                  {lang === 'fr' ? 'Pourquoi LandVerifyCM ?' : 'Why LandVerifyCM?'}
+                </h2>
                 <p className="text-gray-500 leading-relaxed text-base mb-6">{t.about.missionText}</p>
-                <div className="flex items-center gap-3 text-sm font-semibold text-green-700 bg-green-50 border border-green-200 rounded-2xl px-5 py-3.5">
-                  <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-start gap-3 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-2xl px-5 py-4">
+                  <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
-                  Capstone Project — {t.about.dept}
+                  <span>{t.about.authorityText}</span>
                 </div>
               </motion.div>
 
               <div className="grid grid-cols-2 gap-4">
-                {goals.map((g, i) => (
+                {values.map((v, i) => (
                   <motion.div
-                    key={g.label}
+                    key={v.label}
                     variants={fadeUp}
                     custom={i + 1}
                     className="rounded-2xl p-5 text-white overflow-hidden relative"
-                    style={{ background: `linear-gradient(135deg, var(--tw-gradient-from), var(--tw-gradient-to))` }}
                   >
-                    <div className={`bg-gradient-to-br ${g.gradient} absolute inset-0`} />
+                    <div className={`bg-gradient-to-br ${v.gradient} absolute inset-0 rounded-2xl`} />
                     <div className="relative z-10">
-                      <div className="text-3xl mb-3">{g.icon}</div>
-                      <p className="font-black text-sm mb-1">{g.label}</p>
-                      <p className="text-white/75 text-xs leading-relaxed">{g.desc}</p>
+                      <div className="text-3xl mb-3">{v.icon}</div>
+                      <p className="font-black text-sm mb-1">{v.label}</p>
+                      <p className="text-white/75 text-xs leading-relaxed">{v.desc}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -132,17 +152,21 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          FEATURES
-      ══════════════════════════════════════ */}
+      {/* ── FEATURES ── */}
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-5xl mx-auto">
           <Section>
             <motion.div variants={fadeUp} className="text-center mb-14">
-              <p className="text-green-600 text-xs font-bold uppercase tracking-widest mb-2">Platform Features</p>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3">What the Platform Offers</h2>
+              <p className="text-green-600 text-xs font-bold uppercase tracking-widest mb-2">
+                {lang === 'fr' ? 'Fonctionnalités' : 'Platform Features'}
+              </p>
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3">
+                {lang === 'fr' ? 'Ce que la plateforme offre' : 'What the Platform Offers'}
+              </h2>
               <p className="text-gray-500 text-base max-w-lg mx-auto">
-                Every feature was designed to combat land fraud and give citizens confidence in property transactions.
+                {lang === 'fr'
+                  ? 'Chaque fonctionnalité a été conçue pour lutter contre la fraude foncière et donner aux citoyens confiance dans les transactions immobilières.'
+                  : 'Every feature is designed to combat land fraud and give citizens confidence in property transactions.'}
               </p>
             </motion.div>
 
@@ -154,7 +178,6 @@ export default function AboutPage() {
                   custom={i}
                   className={`rounded-2xl p-6 border ${f.border} ${f.bg} hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
                 >
-                  {/* Coloured icon circle */}
                   <div className={`w-12 h-12 bg-gradient-to-br ${f.gradient} rounded-xl flex items-center justify-center text-2xl mb-4 shadow-md group-hover:scale-110 transition-transform duration-300`}>
                     {f.icon}
                   </div>
@@ -167,52 +190,21 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          TEAM
-      ══════════════════════════════════════ */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <Section>
-            <motion.div variants={fadeUp} className="text-center mb-14">
-              <p className="text-green-600 text-xs font-bold uppercase tracking-widest mb-2">{t.about.team}</p>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3">Meet the Team</h2>
-              <p className="text-gray-400 text-sm">
-                {t.about.supervisor}:{' '}
-                <strong className="text-gray-700 font-bold">Mr. Joel Teto Kamdem</strong>
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
-              {team.map((member, i) => (
-                <motion.div
-                  key={member.name}
-                  variants={fadeUp}
-                  custom={i}
-                  className={`${member.bg} rounded-2xl p-7 text-center border-2 ${member.border} hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group`}
-                >
-                  <div className={`w-18 h-18 w-[72px] h-[72px] bg-gradient-to-br ${member.gradient} rounded-2xl flex items-center justify-center text-white font-black text-2xl mx-auto mb-5 shadow-lg ring-4 ${member.ring} group-hover:scale-105 transition-transform duration-300`}>
-                    {member.initials}
-                  </div>
-                  <h4 className="font-black text-gray-900 text-sm mb-1.5">{member.name}</h4>
-                  <p className="text-xs text-gray-500 leading-relaxed">{member.role}</p>
-                </motion.div>
-              ))}
-            </div>
-          </Section>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          TECH STACK
-      ══════════════════════════════════════ */}
+      {/* ── TECH STACK ── */}
       <section className="py-20 px-4 bg-gray-900">
         <div className="max-w-4xl mx-auto text-center">
           <Section>
             <motion.div variants={fadeUp}>
-              <p className="text-green-400 text-xs font-bold uppercase tracking-widest mb-2">Built With</p>
-              <h3 className="text-white font-black text-3xl mb-3">Tech Stack</h3>
+              <p className="text-green-400 text-xs font-bold uppercase tracking-widest mb-2">
+                {lang === 'fr' ? 'Construit avec' : 'Built With'}
+              </p>
+              <h3 className="text-white font-black text-3xl mb-3">
+                {lang === 'fr' ? 'Notre Technologie' : 'Our Technology'}
+              </h3>
               <p className="text-gray-400 text-sm mb-10 max-w-md mx-auto">
-                Modern, production-ready technologies selected for performance, type safety, and developer experience.
+                {lang === 'fr'
+                  ? 'Technologies modernes et prêtes pour la production, sélectionnées pour la performance, la sécurité et la fiabilité.'
+                  : 'Modern, production-grade technologies selected for performance, security, and long-term reliability.'}
               </p>
             </motion.div>
 
@@ -230,49 +222,72 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          PROJECT INFO BANNER
-      ══════════════════════════════════════ */}
+      {/* ── CONTACT & LEGAL ── */}
       <section className="py-16 px-4 bg-white border-t border-gray-100">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <Section>
+            <motion.div variants={fadeUp} className="text-center mb-12">
+              <p className="text-green-600 text-xs font-bold uppercase tracking-widest mb-2">{t.about.contactTitle}</p>
+              <h2 className="text-3xl font-black text-gray-900">
+                {lang === 'fr' ? 'Nous Contacter' : 'Get in Touch'}
+              </h2>
+            </motion.div>
+
             <div className="grid md:grid-cols-3 gap-5">
-              {[
-                { label: 'Project',     value: t.about.projectText,   icon: '🎓', color: 'bg-green-50 border-green-200 text-green-700' },
-                { label: 'Supervisor',  value: 'Mr. Joel Teto Kamdem', icon: '👨‍🏫', color: 'bg-blue-50 border-blue-200 text-blue-700' },
-                { label: 'Department',  value: t.about.dept,           icon: '🏛️', color: 'bg-purple-50 border-purple-200 text-purple-700' },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.label}
-                  variants={fadeUp}
-                  custom={i}
-                  className={`rounded-2xl p-5 border-2 ${item.color}`}
-                >
-                  <div className="text-2xl mb-2">{item.icon}</div>
-                  <p className="text-xs font-bold uppercase tracking-widest opacity-60 mb-1">{item.label}</p>
-                  <p className="font-bold text-sm leading-snug">{item.value}</p>
-                </motion.div>
-              ))}
+              <motion.div variants={fadeUp} custom={0} className="rounded-2xl p-6 border-2 border-green-200 bg-green-50">
+                <div className="w-11 h-11 bg-green-500 rounded-xl flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <p className="text-xs font-bold uppercase tracking-widest text-green-600 mb-1">Email</p>
+                <p className="font-bold text-gray-900 text-sm mb-1">{t.about.contactEmail}</p>
+                <p className="text-xs text-gray-500">{t.about.contactHours}</p>
+              </motion.div>
+
+              <motion.div variants={fadeUp} custom={1} className="rounded-2xl p-6 border-2 border-blue-200 bg-blue-50">
+                <div className="w-11 h-11 bg-blue-500 rounded-xl flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                </div>
+                <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-1">
+                  {lang === 'fr' ? 'Téléphone' : 'Phone'}
+                </p>
+                <p className="font-bold text-gray-900 text-sm mb-1">{t.about.contactPhone}</p>
+                <p className="text-xs text-gray-500">{t.about.contactAddress}</p>
+              </motion.div>
+
+              <motion.div variants={fadeUp} custom={2} className="rounded-2xl p-6 border-2 border-purple-200 bg-purple-50">
+                <div className="w-11 h-11 bg-purple-500 rounded-xl flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <p className="text-xs font-bold uppercase tracking-widest text-purple-600 mb-1">{t.about.legalTitle}</p>
+                <p className="text-xs text-gray-700 leading-relaxed mb-2">{t.about.licensedBy}</p>
+                <p className="text-xs text-gray-500 leading-relaxed">{t.about.dataProtection}</p>
+              </motion.div>
             </div>
           </Section>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          CTA
-      ══════════════════════════════════════ */}
+      {/* ── CTA ── */}
       <section className="py-20 px-4 hero-gradient relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '28px 28px' }}
         />
         <div className="max-w-2xl mx-auto text-center relative z-10">
           <Section>
-            <motion.p variants={fadeUp} className="text-green-300 text-xs font-bold uppercase tracking-widest mb-3">Get Started</motion.p>
+            <motion.p variants={fadeUp} className="text-green-300 text-xs font-bold uppercase tracking-widest mb-3">
+              {t.cta.getStarted}
+            </motion.p>
             <motion.h3 variants={fadeUp} custom={1} className="text-3xl md:text-4xl font-black text-white mb-4">
-              Ready to verify a land parcel?
+              {t.about.ctaTitle}
             </motion.h3>
             <motion.p variants={fadeUp} custom={2} className="text-green-100/70 text-base mb-8 max-w-md mx-auto">
-              Search land parcels or create a free account to get full access to the registry.
+              {t.about.ctaSubtitle}
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
@@ -282,7 +297,7 @@ export default function AboutPage() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                Search Lands
+                {t.about.ctaSearch}
               </Link>
               <Link
                 to="/register"
@@ -291,7 +306,7 @@ export default function AboutPage() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
-                Create Account
+                {t.about.ctaRegister}
               </Link>
             </motion.div>
           </Section>
