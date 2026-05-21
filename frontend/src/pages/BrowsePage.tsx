@@ -41,7 +41,7 @@ const SAMPLE_LANDS: SampleLand[] = [
   { id: 's12', quarter: 'Nlongkak',           areaSqm: 280,  status: 'NOT_VALID', landUseType: 'COMMERCIAL' },
 ];
 
-const SAMPLE_QUARTERS = ['All', ...Array.from(new Set(SAMPLE_LANDS.map((l) => l.quarter)))];
+const SAMPLE_QUARTER_VALUES = Array.from(new Set(SAMPLE_LANDS.map((l) => l.quarter)));
 
 const cardVariants: import('framer-motion').Variants = {
   hidden:  { opacity: 0, y: 24 },
@@ -49,10 +49,12 @@ const cardVariants: import('framer-motion').Variants = {
 };
 
 export default function BrowsePage() {
-  const [quarter, setQuarter] = useState('All');
+  const [quarter, setQuarter] = useState('__all__');
   const { t } = useLang();
 
-  const filtered = quarter === 'All'
+  const SAMPLE_QUARTERS = [{ value: '__all__', label: t.browse.allFilter }, ...SAMPLE_QUARTER_VALUES.map((q) => ({ value: q, label: q }))];
+
+  const filtered = quarter === '__all__'
     ? SAMPLE_LANDS
     : SAMPLE_LANDS.filter((l) => l.quarter === quarter);
 
@@ -64,23 +66,23 @@ export default function BrowsePage() {
         <div className="max-w-6xl mx-auto px-4 py-8">
           <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
             <h1 className="text-3xl font-black text-gray-900 mb-1">{t.browse.title}</h1>
-            <p className="text-gray-400 text-sm mb-6">Browse sample previews — enter a land title ID to see real details.</p>
+            <p className="text-gray-400 text-sm mb-6">{t.browse.sampleSubtitle}</p>
 
             {/* Quarter filter pills */}
             <div className="flex flex-wrap gap-2">
-              {SAMPLE_QUARTERS.map((q) => (
+              {SAMPLE_QUARTERS.map(({ value, label }) => (
                 <motion.button
-                  key={q}
+                  key={value}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  onClick={() => setQuarter(q)}
+                  onClick={() => setQuarter(value)}
                   className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 ${
-                    quarter === q
+                    quarter === value
                       ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-500/25'
                       : 'bg-white text-gray-600 border-gray-200 hover:border-green-300 hover:bg-green-50'
                   }`}
                 >
-                  {q}
+                  {label}
                 </motion.button>
               ))}
             </div>
@@ -104,11 +106,8 @@ export default function BrowsePage() {
               </svg>
             </div>
             <div>
-              <p className="text-amber-800 font-bold text-sm">Sample Preview — Owner Data Protected</p>
-              <p className="text-amber-700 text-xs mt-0.5 leading-relaxed">
-                This page shows anonymized sample records only. Real ownership details, title numbers, and GPS data are protected.
-                Enter the exact <strong>Land Title ID</strong> in Search to verify a specific parcel.
-              </p>
+              <p className="text-amber-800 font-bold text-sm">{t.browse.privacyTitle}</p>
+              <p className="text-amber-700 text-xs mt-0.5 leading-relaxed">{t.browse.privacyDesc}</p>
             </div>
           </div>
           <Link
@@ -118,7 +117,7 @@ export default function BrowsePage() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            Search by Title ID
+            {t.browse.searchByTitleBtn}
           </Link>
         </motion.div>
 
@@ -131,9 +130,9 @@ export default function BrowsePage() {
             exit={{ opacity: 0 }}
             className="text-sm text-gray-400 mb-4 font-medium"
           >
-            <span className="text-green-600 font-bold">{filtered.length}</span> sample{' '}
-            {filtered.length === 1 ? 'preview' : 'previews'} shown
-            {quarter !== 'All' && <span className="text-gray-300"> · {quarter}</span>}
+            <span className="text-green-600 font-bold">{filtered.length}</span>{' '}
+            {filtered.length === 1 ? t.browse.sampleShown : t.browse.samplesShown}
+            {quarter !== '__all__' && <span className="text-gray-300"> · {quarter}</span>}
           </motion.p>
         </AnimatePresence>
 
@@ -158,9 +157,9 @@ export default function BrowsePage() {
                 {/* Header row */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-1">Title Number</p>
+                    <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-1">{t.landCard.titleNumber}</p>
                     <p className="text-lg font-black text-gray-300 tracking-widest select-none">● ● ● ● ● ●</p>
-                    <p className="text-xs text-gray-300 mt-0.5 italic">Confidential</p>
+                    <p className="text-xs text-gray-300 mt-0.5 italic">{t.browse.confidential}</p>
                   </div>
 
                   {/* Status badge */}
@@ -187,8 +186,8 @@ export default function BrowsePage() {
                     <p className="text-gray-800 font-bold">{land.areaSqm.toLocaleString()} m²</p>
                   </div>
                   <div className="bg-gray-50 rounded-xl p-3 col-span-2">
-                    <p className="text-gray-400 text-[10px] uppercase tracking-wide font-semibold mb-0.5">Owner</p>
-                    <p className="text-gray-300 font-semibold italic">— Protected —</p>
+                    <p className="text-gray-400 text-[10px] uppercase tracking-wide font-semibold mb-0.5">{t.landCard.owner}</p>
+                    <p className="text-gray-300 font-semibold italic">{t.browse.ownerProtected}</p>
                   </div>
                 </div>
 
@@ -201,7 +200,7 @@ export default function BrowsePage() {
                     to="/search"
                     className="text-xs text-green-600 hover:text-green-500 font-semibold transition-colors flex items-center gap-1"
                   >
-                    Verify →
+                    {t.browse.verifyLink}
                   </Link>
                 </div>
               </div>
@@ -221,10 +220,8 @@ export default function BrowsePage() {
           />
           <div className="relative z-10">
             <div className="text-4xl mb-4">🔐</div>
-            <h3 className="text-xl font-black mb-2">Want to verify a real parcel?</h3>
-            <p className="text-green-100/80 text-sm mb-6 max-w-sm mx-auto">
-              Real land data is protected. Enter the exact land title number to see full ownership details, GPS location, and verification status.
-            </p>
+            <h3 className="text-xl font-black mb-2">{t.browse.wantVerify}</h3>
+            <p className="text-green-100/80 text-sm mb-6 max-w-sm mx-auto">{t.browse.realDataProtected}</p>
             <Link
               to="/search"
               className="inline-flex items-center gap-2 bg-white text-green-800 font-bold px-8 py-3 rounded-xl text-sm hover:bg-green-50 active:scale-95 transition-all duration-200 shadow-lg"
@@ -232,7 +229,7 @@ export default function BrowsePage() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              Search by Land Title Number
+              {t.browse.searchByTitleFull}
             </Link>
           </div>
         </motion.div>

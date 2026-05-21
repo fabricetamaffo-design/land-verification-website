@@ -95,7 +95,7 @@ export default function SearchPage() {
               <svg className="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Land title numbers follow the format: <span className="font-mono text-gray-500">TF-XXX-CITYNAME</span>
+              {t.search.formatHint} <span className="font-mono text-gray-500">TF-XXX-CITYNAME</span>
             </p>
           </motion.div>
         </div>
@@ -159,10 +159,8 @@ export default function SearchPage() {
               className="text-center py-20 bg-white rounded-2xl border border-dashed border-green-200"
             >
               <div className="text-6xl mb-5 float-anim inline-block">🔐</div>
-              <h3 className="text-gray-700 font-semibold text-base mb-2">Enter a Land Title Number</h3>
-              <p className="text-gray-400 text-sm max-w-xs mx-auto">
-                Type the exact title number of the land parcel you want to verify (e.g. TF-001-YAOUNDE).
-              </p>
+              <h3 className="text-gray-700 font-semibold text-base mb-2">{t.search.enterTitle}</h3>
+              <p className="text-gray-400 text-sm max-w-xs mx-auto">{t.search.enterTitleDesc}</p>
             </motion.div>
           )}
         </AnimatePresence>
