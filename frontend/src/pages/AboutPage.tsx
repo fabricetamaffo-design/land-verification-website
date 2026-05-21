@@ -79,7 +79,7 @@ export default function AboutPage() {
               <div className="w-2 h-2 rounded-full bg-green-400 pulse-dot" />
               {t.about.authorityLabel}
             </span>
-            <h1 className="text-5xl md:text-6xl font-black text-white mb-5 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-5 leading-tight">
               {t.about.title}
             </h1>
             <p className="text-green-100/80 text-lg max-w-2xl mx-auto leading-relaxed">
@@ -115,7 +115,7 @@ export default function AboutPage() {
       <section className="py-20 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <Section>
-            <div className="grid md:grid-cols-2 gap-14 items-center">
+            <div className="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
               <motion.div variants={fadeUp}>
                 <p className="text-green-600 text-xs font-bold uppercase tracking-widest mb-2">{t.about.mission}</p>
                 <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-5 leading-tight">
@@ -130,7 +130,7 @@ export default function AboutPage() {
                 </div>
               </motion.div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {values.map((v, i) => (
                   <motion.div
                     key={v.label}
@@ -233,7 +233,7 @@ export default function AboutPage() {
               </h2>
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-5">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
               <motion.div variants={fadeUp} custom={0} className="rounded-2xl p-6 border-2 border-green-200 bg-green-50">
                 <div className="w-11 h-11 bg-green-500 rounded-xl flex items-center justify-center mb-4">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

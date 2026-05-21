@@ -91,7 +91,7 @@ export default function SupportChatPage() {
       <div className="max-w-5xl mx-auto px-4">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white px-8 py-7">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white px-4 sm:px-8 py-5 sm:py-7">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-gray-400 text-xs uppercase tracking-widest font-semibold mb-2">Customer Support</p>
@@ -118,7 +118,7 @@ export default function SupportChatPage() {
               </div>
             </div>
 
-            <div ref={listRef} className="h-[56vh] overflow-y-auto px-4 sm:px-8 py-6 bg-white">
+            <div ref={listRef} className="h-[45vh] sm:h-[56vh] overflow-y-auto px-4 sm:px-8 py-6 bg-white">
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3">
                   <div className="relative w-10 h-10">
