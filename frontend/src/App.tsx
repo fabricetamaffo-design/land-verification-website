@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/Navbar';
@@ -32,6 +33,44 @@ function SupportEntryPage() {
   return isAdmin ? <AdminSupportPage /> : <SupportChatPage />;
 }
 
+function AppRoutes() {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.18, ease: 'easeOut' }}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/lands/:id" element={<LandDetailPage />} />
+          <Route path="/browse" element={<BrowsePage />} />
+          <Route path="/about" element={<AboutPage />} />
+
+          {/* Protected: logged-in users */}
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/support" element={<ProtectedRoute><SupportEntryPage /></ProtectedRoute>} />
+
+          {/* Protected: admins only */}
+          <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/upload" element={<ProtectedRoute adminOnly><UploadLandPage /></ProtectedRoute>} />
+          <Route path="/admin/manage" element={<ProtectedRoute adminOnly><ManageLandsPage /></ProtectedRoute>} />
+          <Route path="/admin/edit/:id" element={<ProtectedRoute adminOnly><EditLandPage /></ProtectedRoute>} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 export default function App() {
   return (
     <LanguageProvider>
@@ -40,28 +79,7 @@ export default function App() {
           <div className="min-h-screen flex flex-col bg-gray-50">
             <Navbar />
             <main className="flex-1">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/lands/:id" element={<LandDetailPage />} />
-                <Route path="/browse" element={<BrowsePage />} />
-                <Route path="/about" element={<AboutPage />} />
-
-                {/* Protected: logged-in users */}
-                <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-                <Route path="/support" element={<ProtectedRoute><SupportEntryPage /></ProtectedRoute>} />
-
-                {/* Protected: admins only */}
-                <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
-                <Route path="/admin/upload" element={<ProtectedRoute adminOnly><UploadLandPage /></ProtectedRoute>} />
-                <Route path="/admin/manage" element={<ProtectedRoute adminOnly><ManageLandsPage /></ProtectedRoute>} />
-                <Route path="/admin/edit/:id" element={<ProtectedRoute adminOnly><EditLandPage /></ProtectedRoute>} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
+              <AppRoutes />
             </main>
             <Footer />
             <BackToTop />
