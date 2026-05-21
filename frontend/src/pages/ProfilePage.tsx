@@ -39,7 +39,7 @@ export default function ProfilePage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           {/* Profile card */}
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 px-8 py-10">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 px-4 sm:px-8 py-8 sm:py-10">
               <div className="flex items-center gap-5">
                 <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-400 rounded-3xl flex items-center justify-center text-green-900 font-black text-3xl shadow-xl flex-shrink-0">
                   {user?.name?.[0]?.toUpperCase()}
@@ -58,7 +58,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="px-8 py-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="px-4 sm:px-8 py-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { label: t.profile.name, value: user?.name || '—' },
                 { label: t.profile.email, value: user?.email || '—' },
@@ -74,7 +74,7 @@ export default function ProfilePage() {
 
           {/* Change password */}
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-8 py-6 border-b border-gray-100 flex items-start justify-between gap-4">
+            <div className="px-4 sm:px-8 py-6 border-b border-gray-100 flex items-start justify-between gap-4">
               <div>
                 <h2 className="font-black text-gray-900 text-xl flex items-center gap-2">
                   <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="px-8 py-6 space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="px-4 sm:px-8 py-6 space-y-4">
               {[
                 { name: 'currentPassword' as const, label: t.profile.currentPassword, placeholder: 'Current password' },
                 { name: 'newPassword' as const, label: t.profile.newPassword, placeholder: 'New password (min 8 chars)' },

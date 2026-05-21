@@ -22,7 +22,8 @@ export default function MapView({ lat, lng, title }: MapViewProps) {
     <MapContainer
       center={[lat, lng]}
       zoom={16}
-      style={{ height: '380px', width: '100%', borderRadius: '0.75rem' }}
+      className="h-52 sm:h-72 md:h-[380px] w-full rounded-xl"
+      style={{ borderRadius: '0.75rem' }}
       scrollWheelZoom={false}
     >
       <TileLayer
