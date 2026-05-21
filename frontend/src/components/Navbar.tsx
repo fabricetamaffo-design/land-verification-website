@@ -90,9 +90,6 @@ export default function Navbar() {
     'relative text-sm font-medium transition-colors duration-200 py-1';
   const activeClass = 'text-green-300';
   const inactiveClass = 'text-white/80 hover:text-white';
-  const unreadBadgeClass = supportUnread > 0
-    ? 'bg-red-500 text-white'
-    : 'bg-white/20 text-white/80';
 
   return (
     <motion.nav
@@ -123,7 +120,7 @@ export default function Navbar() {
               { path: '/', label: t.nav.home },
               { path: '/search', label: t.nav.search },
               { path: '/browse', label: t.nav.browse },
-              { path: '/about', label: 'About' },
+              { path: '/about', label: t.nav.about },
               ...(isAuthenticated ? [{ path: '/support', label: t.nav.support, unread: supportUnread }] : []),
             ].map(({ path, label }) => (
               <Link
@@ -133,8 +130,8 @@ export default function Navbar() {
               >
                 <span className="inline-flex items-center gap-2">
                   <span>{label}</span>
-                  {path === '/support' && (
-                    <span className={`inline-flex min-w-5 h-5 px-1.5 items-center justify-center rounded-full text-[10px] font-bold ${unreadBadgeClass}`}>
+                  {path === '/support' && supportUnread > 0 && (
+                    <span className="inline-flex min-w-5 h-5 px-1.5 items-center justify-center rounded-full text-[10px] font-bold bg-red-500 text-white">
                       {supportUnread > 99 ? '99+' : supportUnread}
                     </span>
                   )}
@@ -290,7 +287,7 @@ export default function Navbar() {
                 { path: '/', label: t.nav.home },
                 { path: '/search', label: t.nav.search },
                 { path: '/browse', label: t.nav.browse },
-                { path: '/about', label: 'About' },
+                { path: '/about', label: t.nav.about },
                 ...(isAuthenticated ? [{ path: '/support', label: t.nav.support, unread: supportUnread }] : []),
               ].map(({ path, label }) => (
                 <Link
@@ -302,8 +299,8 @@ export default function Navbar() {
                 >
                   <span className="inline-flex items-center gap-2">
                     <span>{label}</span>
-                    {path === '/support' && (
-                      <span className={`inline-flex min-w-5 h-5 px-1.5 items-center justify-center rounded-full text-[10px] font-bold ${unreadBadgeClass}`}>
+                    {path === '/support' && supportUnread > 0 && (
+                      <span className="inline-flex min-w-5 h-5 px-1.5 items-center justify-center rounded-full text-[10px] font-bold bg-red-500 text-white">
                         {supportUnread > 99 ? '99+' : supportUnread}
                       </span>
                     )}
