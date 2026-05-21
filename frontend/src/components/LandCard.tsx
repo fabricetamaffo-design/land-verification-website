@@ -41,7 +41,7 @@ export default function LandCard({ land, index = 0 }: { land: SearchResult; inde
                 <p className="text-[10px] text-gray-400 mt-0.5">Approved: {land.titleApprovedYear}</p>
               )}
             </div>
-            <StatusBadge status={land.status} notes={land.notes} />
+            <StatusBadge status={land.status} notes={land.notes} compact />
           </div>
 
           {/* Details Grid */}
@@ -65,8 +65,11 @@ export default function LandCard({ land, index = 0 }: { land: SearchResult; inde
               <span className="text-base">{LAND_USE_ICONS[land.landUseType] || '🏘️'}</span>
               <span className="text-[10px] text-gray-400 font-medium">{LAND_USE_LABELS[land.landUseType] || land.landUseType}</span>
             </div>
-            <span className="text-xs text-green-600 font-semibold group-hover:text-green-500 transition-colors">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 border border-green-200 rounded-full px-3 py-1 group-hover:bg-green-600 group-hover:text-white group-hover:border-green-600 transition-all duration-200">
               {t.landCard.viewDetails}
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
             </span>
           </div>
         </div>
