@@ -132,7 +132,7 @@ export default function HomePage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Enter Land Title ID — e.g. TF-001-YAOUNDE"
-                className="w-full pl-12 pr-4 py-4 rounded-2xl text-gray-900 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-green-400/30 shadow-2xl bg-white/97 placeholder:text-gray-400"
+                className="w-full pl-12 pr-4 py-4 rounded-2xl text-gray-900 text-sm font-mono focus:outline-none focus:ring-4 focus:ring-green-400/30 shadow-2xl bg-white/97 placeholder:text-gray-400 placeholder:font-sans"
               />
             </div>
             <motion.button
@@ -152,13 +152,13 @@ export default function HomePage() {
             transition={{ delay: 0.6 }}
             className="text-green-200/60 text-sm mb-12"
           >
-            Not sure of the ID?{' '}
+            {t.hero.notSureHint}{' '}
             <Link to="/browse" className="text-green-300 hover:text-white font-semibold underline underline-offset-4 transition-colors">
-              Browse sample previews
+              {t.hero.browseSamples}
             </Link>
-            {' '}or{' '}
+            {' '}{t.hero.or}{' '}
             <Link to="/register" className="text-green-300 hover:text-white font-semibold underline underline-offset-4 transition-colors">
-              create a free account
+              {t.hero.createAccount}
             </Link>
           </motion.p>
 
@@ -200,7 +200,7 @@ export default function HomePage() {
           <Section className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { target: 500, suffix: '+', label: t.stats.parcels,  icon: '🏘️', color: 'text-green-700' },
-              { target: 2,   suffix: '',  label: t.stats.statuses, icon: '✅', color: 'text-blue-700' },
+              { target: 3,   suffix: '',  label: t.stats.fraudLevels, icon: '🛡️', color: 'text-blue-700' },
               { target: 99,  suffix: '%', label: t.stats.uptime,   icon: '⚡', color: 'text-amber-600' },
               { target: 120, suffix: '+', label: t.stats.users,    icon: '👥', color: 'text-purple-700' },
             ].map((s, i) => (
@@ -289,7 +289,7 @@ export default function HomePage() {
                   title: 'text-emerald-800',
                   desc: 'text-emerald-700',
                   badge: 'bg-emerald-100 text-emerald-700',
-                  badgeLabel: 'Safe to proceed',
+                  badgeLabel: t.statusGuide.safeProceed,
                 },
                 {
                   status: t.statusGuide.statuses[1],
@@ -304,7 +304,7 @@ export default function HomePage() {
                   title: 'text-red-800',
                   desc: 'text-red-700',
                   badge: 'bg-red-100 text-red-700',
-                  badgeLabel: 'Do not proceed',
+                  badgeLabel: t.statusGuide.dontProceed,
                 },
               ].map((item, i) => (
                 <motion.div
@@ -337,20 +337,13 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto">
           <Section>
             <motion.div variants={fadeUp} className="text-center mb-14">
-              <p className="text-green-600 text-xs font-bold uppercase tracking-widest mb-2">Why LandVerifyCM</p>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3">Built to Protect Your Investment</h2>
-              <p className="text-gray-500 text-base max-w-lg mx-auto">
-                Every feature is designed to give you confidence before making any land transaction.
-              </p>
+              <p className="text-green-600 text-xs font-bold uppercase tracking-widest mb-2">{t.homepage.whyLabel}</p>
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3">{t.homepage.whyTitle}</h2>
+              <p className="text-gray-500 text-base max-w-lg mx-auto">{t.homepage.whyDesc}</p>
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {[
-                { icon: '🛡️', title: 'Fraud Detection', desc: 'Automatic duplicate title and GPS overlap detection across the entire registry.' },
-                { icon: '📍', title: 'GPS Mapping', desc: 'Interactive map showing the exact location of every registered parcel.' },
-                { icon: '📜', title: 'Ownership History', desc: 'Full chain of title from original owner to the current holder, with transfer dates.' },
-                { icon: '⚡', title: 'Instant Results', desc: 'Enter a title number and get the verification result in under a second.' },
-              ].map((f, i) => (
+              {t.homepage.features.map((f, i) => (
                 <motion.div
                   key={f.title}
                   variants={fadeUp}
@@ -377,7 +370,7 @@ export default function HomePage() {
         <div className="max-w-2xl mx-auto text-center relative z-10">
           <Section>
             <motion.p variants={fadeUp} className="text-green-300 text-xs font-bold uppercase tracking-widest mb-3">
-              Get Started
+              {t.cta.getStarted}
             </motion.p>
             <motion.h2 variants={fadeUp} custom={1} className="text-3xl md:text-4xl font-black text-white mb-4">
               {t.cta.title}
