@@ -7,7 +7,6 @@ export const fr: Translations = {
     browse: 'Parcourir',
     about: 'À Propos',
     admin: 'Panneau Admin',
-    support: 'Support',
     login: 'Connexion',
     register: "S'inscrire",
     logout: 'Déconnexion',
