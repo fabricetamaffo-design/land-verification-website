@@ -51,6 +51,12 @@ export default function SupportChatPage() {
     markMySupportRead().catch(() => {});
   }, []);
 
+  // Disconnect only when the component fully unmounts
+  useEffect(() => {
+    return () => { socket?.disconnect(); };
+  }, [socket]);
+
+  // Re-register message handler when threadId changes — but never disconnect here
   useEffect(() => {
     if (!socket) return;
     const onMsg = (msg: SupportMessage) => {
@@ -59,10 +65,7 @@ export default function SupportChatPage() {
       notifyUnreadChanged();
     };
     socket.on('support:message', onMsg);
-    return () => {
-      socket.off('support:message', onMsg);
-      socket.disconnect();
-    };
+    return () => { socket.off('support:message', onMsg); };
   }, [socket, threadId]);
 
   useEffect(() => {

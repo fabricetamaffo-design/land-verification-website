@@ -77,6 +77,12 @@ export default function AdminSupportPage() {
     adminMarkThreadRead(activeThreadId).catch(() => {});
   }, [activeThreadId]);
 
+  // Disconnect only when the component fully unmounts
+  useEffect(() => {
+    return () => { socket?.disconnect(); };
+  }, [socket]);
+
+  // Re-register message handler when activeThreadId changes — but never disconnect here
   useEffect(() => {
     if (!socket) return;
     const onMsg = (msg: SupportMessage) => {
@@ -102,10 +108,7 @@ export default function AdminSupportPage() {
       notifyUnreadChanged();
     };
     socket.on('support:message', onMsg);
-    return () => {
-      socket.off('support:message', onMsg);
-      socket.disconnect();
-    };
+    return () => { socket.off('support:message', onMsg); };
   }, [socket, activeThreadId]);
 
   useEffect(() => {

@@ -285,9 +285,16 @@ export default function LandDetailPage() {
                 {t.landDetail.gpsLocation}
               </h2>
               {land.gpsLat && land.gpsLng ? (
-                <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
-                  <MapView lat={land.gpsLat} lng={land.gpsLng} title={`${land.titleNumber} — ${land.ownerName}`} />
-                </div>
+                <MapView
+                  lat={land.gpsLat}
+                  lng={land.gpsLng}
+                  title={`${land.titleNumber} — ${land.ownerName}`}
+                  titleNumber={land.titleNumber}
+                  ownerName={currentOwner?.ownerName || land.ownerName}
+                  quarter={land.quarter}
+                  areaSqm={land.areaSqm}
+                  status={land.status}
+                />
               ) : (
                 <div className="bg-gray-50 rounded-2xl p-10 text-center text-gray-400 border border-dashed border-gray-200">{t.landDetail.noGps}</div>
               )}
