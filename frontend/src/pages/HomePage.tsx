@@ -97,7 +97,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.1 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.08] mb-4 drop-shadow-lg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.08] mb-4 drop-shadow-lg"
           >
             {t.hero.title}{' '}
             <span style={{ color: '#fbbf24', textShadow: '0 2px 24px rgba(251,191,36,0.5)' }}>

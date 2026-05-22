@@ -19,19 +19,11 @@ import LandDetailPage from './pages/LandDetailPage';
 import BrowsePage from './pages/BrowsePage';
 import AboutPage from './pages/AboutPage';
 import ProfilePage from './pages/ProfilePage';
-import SupportChatPage from './pages/SupportChatPage';
 import NotFoundPage from './pages/NotFoundPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UploadLandPage from './pages/admin/UploadLandPage';
 import ManageLandsPage from './pages/admin/ManageLandsPage';
 import EditLandPage from './pages/admin/EditLandPage';
-import AdminSupportPage from './pages/admin/AdminSupportPage';
-import { useAuth } from './context/AuthContext';
-
-function SupportEntryPage() {
-  const { isAdmin } = useAuth();
-  return isAdmin ? <AdminSupportPage /> : <SupportChatPage />;
-}
 
 function AppRoutes() {
   const location = useLocation();
@@ -57,7 +49,6 @@ function AppRoutes() {
 
           {/* Protected: logged-in users */}
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path="/support" element={<ProtectedRoute><SupportEntryPage /></ProtectedRoute>} />
 
           {/* Protected: admins only */}
           <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />

@@ -3,8 +3,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
-import { adminGetSupportUnreadCount, getMySupportUnreadCount } from '../services/support.service';
-import { connectSupportSocket } from '../services/support.socket';
 
 export default function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
@@ -14,7 +12,6 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [supportUnread, setSupportUnread] = useState(0);
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,49 +32,6 @@ export default function Navbar() {
 
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setSupportUnread(0);
-      return;
-    }
-
-    let mounted = true;
-    const refreshUnread = async () => {
-      try {
-        const unread = isAdmin ? await adminGetSupportUnreadCount() : await getMySupportUnreadCount();
-        if (mounted) setSupportUnread(unread);
-      } catch {
-        if (mounted) setSupportUnread(0);
-      }
-    };
-
-    refreshUnread();
-    const interval = setInterval(refreshUnread, 30000);
-    const onUnreadChanged = () => refreshUnread();
-    window.addEventListener('support-unread-changed', onUnreadChanged);
-
-    return () => {
-      mounted = false;
-      clearInterval(interval);
-      window.removeEventListener('support-unread-changed', onUnreadChanged);
-    };
-  }, [isAuthenticated, isAdmin]);
-
-  useEffect(() => {
-    if (!isAuthenticated || !user) return;
-    const token = localStorage.getItem('lv_token');
-    if (!token) return;
-
-    const socket = connectSupportSocket(token);
-    const onMessage = () => window.dispatchEvent(new Event('support-unread-changed'));
-    socket.on('support:message', onMessage);
-
-    return () => {
-      socket.off('support:message', onMessage);
-      socket.disconnect();
-    };
-  }, [isAuthenticated, user?.id]);
-
   const handleLogout = () => {
     logout();
     setProfileOpen(false);
@@ -86,10 +40,16 @@ export default function Navbar() {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const navLink =
-    'relative text-sm font-medium transition-colors duration-200 py-1';
+  const navLink = 'relative text-sm font-medium transition-colors duration-200 py-1';
   const activeClass = 'text-green-300';
   const inactiveClass = 'text-white/80 hover:text-white';
+
+  const navLinks = [
+    { path: '/', label: t.nav.home },
+    { path: '/search', label: t.nav.search },
+    { path: '/browse', label: t.nav.browse },
+    { path: '/about', label: t.nav.about },
+  ];
 
   return (
     <motion.nav
@@ -104,6 +64,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2.5 group">
             <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-300 rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-200">
@@ -116,26 +77,13 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-1">
-            {[
-              { path: '/', label: t.nav.home },
-              { path: '/search', label: t.nav.search },
-              { path: '/browse', label: t.nav.browse },
-              { path: '/about', label: t.nav.about },
-              ...(isAuthenticated ? [{ path: '/support', label: t.nav.support, unread: supportUnread }] : []),
-            ].map(({ path, label }) => (
+            {navLinks.map(({ path, label }) => (
               <Link
                 key={path}
                 to={path}
                 className={`${navLink} ${isActive(path) ? activeClass : inactiveClass} px-3 py-2 rounded-lg hover:bg-white/10`}
               >
-                <span className="inline-flex items-center gap-2">
-                  <span>{label}</span>
-                  {path === '/support' && supportUnread > 0 && (
-                    <span className="inline-flex min-w-5 h-5 px-1.5 items-center justify-center rounded-full text-[10px] font-bold bg-red-500 text-white">
-                      {supportUnread > 99 ? '99+' : supportUnread}
-                    </span>
-                  )}
-                </span>
+                {label}
                 {isActive(path) && (
                   <motion.span
                     layoutId="nav-indicator"
@@ -163,17 +111,13 @@ export default function Navbar() {
                 className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all duration-200 ${
                   lang === 'en' ? 'bg-white text-green-900 shadow' : 'text-white/70 hover:text-white'
                 }`}
-              >
-                EN
-              </button>
+              >EN</button>
               <button
                 onClick={() => setLang('fr')}
                 className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all duration-200 ${
                   lang === 'fr' ? 'bg-white text-green-900 shadow' : 'text-white/70 hover:text-white'
                 }`}
-              >
-                FR
-              </button>
+              >FR</button>
             </div>
 
             {isAuthenticated ? (
@@ -251,22 +195,10 @@ export default function Navbar() {
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
-            <motion.div
-              animate={menuOpen ? 'open' : 'closed'}
-              className="w-5 h-5 flex flex-col justify-center gap-1.5"
-            >
-              <motion.span
-                variants={{ open: { rotate: 45, y: 6 }, closed: { rotate: 0, y: 0 } }}
-                className="block h-0.5 w-5 bg-white origin-center transition-all"
-              />
-              <motion.span
-                variants={{ open: { opacity: 0 }, closed: { opacity: 1 } }}
-                className="block h-0.5 w-5 bg-white transition-all"
-              />
-              <motion.span
-                variants={{ open: { rotate: -45, y: -6 }, closed: { rotate: 0, y: 0 } }}
-                className="block h-0.5 w-5 bg-white origin-center transition-all"
-              />
+            <motion.div animate={menuOpen ? 'open' : 'closed'} className="w-5 h-5 flex flex-col justify-center gap-1.5">
+              <motion.span variants={{ open: { rotate: 45, y: 6 }, closed: { rotate: 0, y: 0 } }} className="block h-0.5 w-5 bg-white origin-center transition-all" />
+              <motion.span variants={{ open: { opacity: 0 }, closed: { opacity: 1 } }} className="block h-0.5 w-5 bg-white transition-all" />
+              <motion.span variants={{ open: { rotate: -45, y: -6 }, closed: { rotate: 0, y: 0 } }} className="block h-0.5 w-5 bg-white origin-center transition-all" />
             </motion.div>
           </button>
         </div>
@@ -283,13 +215,7 @@ export default function Navbar() {
             className="md:hidden overflow-hidden bg-green-900/98 border-t border-white/10"
           >
             <div className="px-4 py-4 space-y-1">
-              {[
-                { path: '/', label: t.nav.home },
-                { path: '/search', label: t.nav.search },
-                { path: '/browse', label: t.nav.browse },
-                { path: '/about', label: t.nav.about },
-                ...(isAuthenticated ? [{ path: '/support', label: t.nav.support, unread: supportUnread }] : []),
-              ].map(({ path, label }) => (
+              {navLinks.map(({ path, label }) => (
                 <Link
                   key={path}
                   to={path}
@@ -297,14 +223,7 @@ export default function Navbar() {
                     isActive(path) ? 'bg-white/15 text-green-300' : 'text-white/80 hover:bg-white/10 hover:text-white'
                   }`}
                 >
-                  <span className="inline-flex items-center gap-2">
-                    <span>{label}</span>
-                    {path === '/support' && supportUnread > 0 && (
-                      <span className="inline-flex min-w-5 h-5 px-1.5 items-center justify-center rounded-full text-[10px] font-bold bg-red-500 text-white">
-                        {supportUnread > 99 ? '99+' : supportUnread}
-                      </span>
-                    )}
-                  </span>
+                  {label}
                 </Link>
               ))}
               {isAdmin && (
@@ -314,25 +233,16 @@ export default function Navbar() {
               )}
 
               <div className="pt-3 border-t border-white/10 space-y-1">
-                {/* Language */}
                 <div className="flex items-center space-x-2 px-4 py-2">
                   <span className="text-white/50 text-xs">Language:</span>
-                  <button
-                    onClick={() => setLang('en')}
-                    className={`px-3 py-1 rounded-md text-xs font-semibold ${lang === 'en' ? 'bg-white text-green-900' : 'text-white/60 hover:text-white'}`}
-                  >EN</button>
-                  <button
-                    onClick={() => setLang('fr')}
-                    className={`px-3 py-1 rounded-md text-xs font-semibold ${lang === 'fr' ? 'bg-white text-green-900' : 'text-white/60 hover:text-white'}`}
-                  >FR</button>
+                  <button onClick={() => setLang('en')} className={`px-3 py-1 rounded-md text-xs font-semibold ${lang === 'en' ? 'bg-white text-green-900' : 'text-white/60 hover:text-white'}`}>EN</button>
+                  <button onClick={() => setLang('fr')} className={`px-3 py-1 rounded-md text-xs font-semibold ${lang === 'fr' ? 'bg-white text-green-900' : 'text-white/60 hover:text-white'}`}>FR</button>
                 </div>
 
                 {isAuthenticated ? (
                   <>
                     <Link to="/profile" className="block px-4 py-2.5 rounded-lg text-sm text-white/80 hover:bg-white/10">{t.nav.profile}</Link>
-                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2.5 rounded-lg text-sm text-red-300 hover:bg-red-500/10">
-                      {t.nav.logout}
-                    </button>
+                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2.5 rounded-lg text-sm text-red-300 hover:bg-red-500/10">{t.nav.logout}</button>
                   </>
                 ) : (
                   <>

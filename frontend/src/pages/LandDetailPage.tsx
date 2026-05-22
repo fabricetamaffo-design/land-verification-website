@@ -168,7 +168,7 @@ export default function LandDetailPage() {
             <div className={`h-2 ${valid ? 'bg-gradient-to-r from-emerald-400 to-green-500' : 'bg-gradient-to-r from-red-400 to-rose-500'}`} />
 
             {/* Header */}
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white px-8 py-8">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white px-4 sm:px-8 py-6 sm:py-8">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
                   <p className="text-gray-400 text-xs uppercase tracking-widest font-semibold mb-2">{t.landDetail.landParcel}</p>
@@ -196,7 +196,7 @@ export default function LandDetailPage() {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="px-8 py-4 border-b bg-red-50 border-red-100 text-red-700 flex items-start gap-3"
+                className="px-4 sm:px-8 py-4 border-b bg-red-50 border-red-100 text-red-700 flex items-start gap-3"
               >
                 <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -210,7 +210,7 @@ export default function LandDetailPage() {
             )}
 
             {/* Buyer summary bar */}
-            <div className="px-8 py-4 bg-gray-50 border-b border-gray-100 flex flex-wrap gap-4 text-xs">
+            <div className="px-4 sm:px-8 py-4 bg-gray-50 border-b border-gray-100 flex flex-wrap gap-3 text-xs">
               {[
                 { icon: '🏘️', label: t.landDetail.quarter, value: land.quarter },
                 { icon: '📐', label: t.landDetail.area, value: `${land.areaSqm.toLocaleString()} m²` },
@@ -226,7 +226,7 @@ export default function LandDetailPage() {
             </div>
 
             {/* Details Grid */}
-            <div className="px-8 py-8">
+            <div className="px-4 sm:px-8 py-6 sm:py-8">
               <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
                 Land Record Details
@@ -256,7 +256,7 @@ export default function LandDetailPage() {
             </div>
 
             {/* Ownership History */}
-            <div className="px-8 pb-8 border-t border-gray-100 pt-6">
+            <div className="px-4 sm:px-8 pb-6 sm:pb-8 border-t border-gray-100 pt-5 sm:pt-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -276,7 +276,7 @@ export default function LandDetailPage() {
             </div>
 
             {/* Map */}
-            <div className="px-8 pb-8 border-t border-gray-100 pt-6">
+            <div className="px-4 sm:px-8 pb-6 sm:pb-8 border-t border-gray-100 pt-5 sm:pt-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -285,9 +285,16 @@ export default function LandDetailPage() {
                 {t.landDetail.gpsLocation}
               </h2>
               {land.gpsLat && land.gpsLng ? (
-                <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
-                  <MapView lat={land.gpsLat} lng={land.gpsLng} title={`${land.titleNumber} — ${land.ownerName}`} />
-                </div>
+                <MapView
+                  lat={land.gpsLat}
+                  lng={land.gpsLng}
+                  title={`${land.titleNumber} — ${land.ownerName}`}
+                  titleNumber={land.titleNumber}
+                  ownerName={currentOwner?.ownerName || land.ownerName}
+                  quarter={land.quarter}
+                  areaSqm={land.areaSqm}
+                  status={land.status}
+                />
               ) : (
                 <div className="bg-gray-50 rounded-2xl p-10 text-center text-gray-400 border border-dashed border-gray-200">{t.landDetail.noGps}</div>
               )}
@@ -295,7 +302,7 @@ export default function LandDetailPage() {
 
             {/* Documents */}
             {land.documents && land.documents.length > 0 && (
-              <div className="px-8 pb-8 border-t border-gray-100 pt-6">
+              <div className="px-4 sm:px-8 pb-6 sm:pb-8 border-t border-gray-100 pt-5 sm:pt-6">
                 <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                   <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -324,7 +331,7 @@ export default function LandDetailPage() {
             )}
 
             {/* Buyer advice footer */}
-            <div className="px-8 pb-8 border-t border-gray-100 pt-6">
+            <div className="px-4 sm:px-8 pb-6 sm:pb-8 border-t border-gray-100 pt-5 sm:pt-6">
               <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5">
                 <h3 className="font-bold text-blue-900 text-sm mb-2 flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
