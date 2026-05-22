@@ -7,7 +7,11 @@ function getBackendUrl() {
 
 export function connectSupportSocket(token: string): Socket {
   return io(getBackendUrl(), {
-    transports: ['websocket'],
+    transports: ['websocket', 'polling'],
     auth: { token },
+    reconnection: true,
+    reconnectionAttempts: 10,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
   });
 }
