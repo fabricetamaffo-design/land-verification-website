@@ -19,8 +19,6 @@ model User {
 
   uploadedLands LandParcel[] @relation("UploadedBy")
   auditLogs     AuditLog[]
-  supportThread   SupportThread?   @relation("UserSupportThread")
-  supportMessages SupportMessage[] @relation("UserSupportMessages")
 
   @@map("users")
 }
@@ -103,40 +101,3 @@ model AuditLog {
   @@map("audit_logs")
 }
 
-enum SupportThreadStatus {
-  OPEN
-  CLOSED
-}
-
-model SupportThread {
-  id            String              @id @default(uuid())
-  userId        String              @unique @map("user_id")
-  status        SupportThreadStatus @default(OPEN)
-  lastMessageAt DateTime            @default(now()) @map("last_message_at")
-  userLastReadAt DateTime           @default(now()) @map("user_last_read_at")
-  adminLastReadAt DateTime          @default(now()) @map("admin_last_read_at")
-  createdAt     DateTime            @default(now()) @map("created_at")
-  updatedAt     DateTime            @updatedAt @map("updated_at")
-
-  user     User             @relation("UserSupportThread", fields: [userId], references: [id], onDelete: Cascade)
-  messages SupportMessage[]
-
-  @@map("support_threads")
-}
-
-model SupportMessage {
-  id              String   @id @default(uuid())
-  threadId        String   @map("thread_id")
-  senderId        String   @map("sender_id")
-  body            String?  @db.Text
-  attachmentName  String?  @map("attachment_name")
-  attachmentPath  String?  @map("attachment_path")
-  attachmentMime  String?  @map("attachment_mime")
-  createdAt       DateTime @default(now()) @map("created_at")
-
-  thread SupportThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  sender User          @relation("UserSupportMessages", fields: [senderId], references: [id], onDelete: Cascade)
-
-  @@index([threadId, createdAt])
-  @@map("support_messages")
-}
