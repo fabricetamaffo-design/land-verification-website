@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
+import { PrismaClient, Role } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 import authRoutes from './routes/auth.routes';
 import landRoutes from './routes/land.routes';
 import adminRoutes from './routes/admin.routes';
@@ -82,6 +84,27 @@ process.on('unhandledRejection', (reason) => {
 app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  seedAdminIfNeeded();
 });
+
+async function seedAdminIfNeeded() {
+  const prisma = new PrismaClient();
+  try {
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@landverify.cm';
+    const existing = await prisma.user.findUnique({ where: { email: adminEmail } });
+    if (!existing) {
+      const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@1234';
+      const passwordHash = await bcrypt.hash(adminPassword, 12);
+      await prisma.user.create({
+        data: { name: 'System Administrator', email: adminEmail, passwordHash, role: Role.ADMIN },
+      });
+      console.log(`[SEED] Admin user created: ${adminEmail}`);
+    }
+  } catch (e) {
+    console.error('[SEED] Failed to seed admin:', e);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 
 export default app;
