@@ -20,6 +20,7 @@ model User {
   uploadedLands LandParcel[] @relation("UploadedBy")
   auditLogs     AuditLog[]
 
+  @@index([role])
   @@map("users")
 }
 
@@ -51,6 +52,9 @@ model LandParcel {
   auditLogs        AuditLog[]
   ownershipHistory OwnershipRecord[]
 
+  @@index([quarter])
+  @@index([status])
+  @@index([isActive])
   @@map("land_parcels")
 }
 
@@ -72,6 +76,7 @@ model OwnershipRecord {
 
   land LandParcel @relation(fields: [landId], references: [id], onDelete: Cascade)
 
+  @@index([landId])
   @@map("ownership_records")
 }
 
@@ -84,6 +89,7 @@ model LandDocument {
 
   land LandParcel @relation(fields: [landId], references: [id], onDelete: Cascade)
 
+  @@index([landId])
   @@map("land_documents")
 }
 
@@ -98,6 +104,8 @@ model AuditLog {
   land LandParcel @relation(fields: [landId], references: [id], onDelete: Cascade)
   user User       @relation(fields: [userId], references: [id])
 
+  @@index([landId])
+  @@index([userId])
   @@map("audit_logs")
 }
 
