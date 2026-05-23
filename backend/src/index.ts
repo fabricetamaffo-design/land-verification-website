@@ -1,5 +1,8 @@
+import 'express-async-errors';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
@@ -32,7 +35,18 @@ const uploadsLandsDir = path.join(uploadsDir, 'lands');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Support comma-separated FRONTEND_URL for multiple allowed origins
+// ── Security headers ──────────────────────────────────────────────────────
+app.use(helmet({
+  // API-only backend — no need to serve HTML, so keep CSP simple
+  contentSecurityPolicy: false,
+  // Allow Railway/Vercel cross-origin requests
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
+
+// ── Compression ───────────────────────────────────────────────────────────
+app.use(compression());
+
+// ── CORS ──────────────────────────────────────────────────────────────────
 const rawOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
   .split(',')
   .map((o) => o.trim())
@@ -56,8 +70,9 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// ── Body parsing with size limits (prevent DoS) ───────────────────────────
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 app.use('/uploads', express.static(uploadsDir));
 
