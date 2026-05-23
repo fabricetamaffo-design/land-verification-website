@@ -1,10 +1,8 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { computeVerificationStatus } from '../utils/verification';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 
 const LAND_USE_TYPES = ['RESIDENTIAL', 'COMMERCIAL', 'AGRICULTURAL', 'MIXED', 'INDUSTRIAL'] as const;
 
@@ -196,22 +194,42 @@ export async function deactivateLand(req: AuthRequest, res: Response): Promise<v
 }
 
 export async function getAllLands(req: AuthRequest, res: Response): Promise<void> {
-  const lands = await prisma.landParcel.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: {
-      uploadedBy: { select: { name: true } },
-      _count: { select: { documents: true, ownershipHistory: true } },
-    },
-  });
-  res.json({ lands });
+  const page = Math.max(1, parseInt(req.query.page as string) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 20));
+  const skip = (page - 1) * limit;
+
+  const [lands, total] = await Promise.all([
+    prisma.landParcel.findMany({
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+      include: {
+        uploadedBy: { select: { name: true } },
+        _count: { select: { documents: true, ownershipHistory: true } },
+      },
+    }),
+    prisma.landParcel.count(),
+  ]);
+
+  res.json({ lands, total, page, limit, totalPages: Math.ceil(total / limit) });
 }
 
 export async function getAllUsers(req: AuthRequest, res: Response): Promise<void> {
-  const users = await prisma.user.findMany({
-    select: { id: true, name: true, email: true, role: true, isActive: true, createdAt: true },
-    orderBy: { createdAt: 'desc' },
-  });
-  res.json({ users });
+  const page = Math.max(1, parseInt(req.query.page as string) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 20));
+  const skip = (page - 1) * limit;
+
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true, isActive: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.user.count(),
+  ]);
+
+  res.json({ users, total, page, limit, totalPages: Math.ceil(total / limit) });
 }
 
 export async function getAuditLogs(req: AuthRequest, res: Response): Promise<void> {

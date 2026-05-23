@@ -1,11 +1,16 @@
--- CreateEnum
-CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
+-- CreateEnum (idempotent — safe on both fresh and existing databases)
+DO $$ BEGIN
+  CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
 
--- CreateEnum
-CREATE TYPE "LandStatus" AS ENUM ('VALID', 'SUSPICIOUS', 'DUPLICATE');
+DO $$ BEGIN
+  CREATE TYPE "LandStatus" AS ENUM ('VALID', 'SUSPICIOUS', 'DUPLICATE');
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateTable
-CREATE TABLE "users" (
+CREATE TABLE IF NOT EXISTS "users" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -19,7 +24,7 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "land_parcels" (
+CREATE TABLE IF NOT EXISTS "land_parcels" (
     "id" TEXT NOT NULL,
     "title_number" TEXT NOT NULL,
     "owner_name" TEXT NOT NULL,
@@ -40,7 +45,7 @@ CREATE TABLE "land_parcels" (
 );
 
 -- CreateTable
-CREATE TABLE "ownership_records" (
+CREATE TABLE IF NOT EXISTS "ownership_records" (
     "id" TEXT NOT NULL,
     "land_id" TEXT NOT NULL,
     "owner_name" TEXT NOT NULL,
@@ -54,7 +59,7 @@ CREATE TABLE "ownership_records" (
 );
 
 -- CreateTable
-CREATE TABLE "land_documents" (
+CREATE TABLE IF NOT EXISTS "land_documents" (
     "id" TEXT NOT NULL,
     "land_id" TEXT NOT NULL,
     "file_name" TEXT NOT NULL,
@@ -65,7 +70,7 @@ CREATE TABLE "land_documents" (
 );
 
 -- CreateTable
-CREATE TABLE "audit_logs" (
+CREATE TABLE IF NOT EXISTS "audit_logs" (
     "id" TEXT NOT NULL,
     "land_id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
@@ -77,27 +82,38 @@ CREATE TABLE "audit_logs" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+CREATE UNIQUE INDEX IF NOT EXISTS "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "land_parcels_title_number_key" ON "land_parcels"("title_number");
+CREATE UNIQUE INDEX IF NOT EXISTS "land_parcels_title_number_key" ON "land_parcels"("title_number");
 
--- AddForeignKey
-ALTER TABLE "land_parcels" ADD CONSTRAINT "land_parcels_uploaded_by_id_fkey"
-    FOREIGN KEY ("uploaded_by_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+-- AddForeignKey (idempotent)
+DO $$ BEGIN
+  ALTER TABLE "land_parcels" ADD CONSTRAINT "land_parcels_uploaded_by_id_fkey"
+      FOREIGN KEY ("uploaded_by_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
 
--- AddForeignKey
-ALTER TABLE "ownership_records" ADD CONSTRAINT "ownership_records_land_id_fkey"
-    FOREIGN KEY ("land_id") REFERENCES "land_parcels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$ BEGIN
+  ALTER TABLE "ownership_records" ADD CONSTRAINT "ownership_records_land_id_fkey"
+      FOREIGN KEY ("land_id") REFERENCES "land_parcels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
 
--- AddForeignKey
-ALTER TABLE "land_documents" ADD CONSTRAINT "land_documents_land_id_fkey"
-    FOREIGN KEY ("land_id") REFERENCES "land_parcels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$ BEGIN
+  ALTER TABLE "land_documents" ADD CONSTRAINT "land_documents_land_id_fkey"
+      FOREIGN KEY ("land_id") REFERENCES "land_parcels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
 
--- AddForeignKey
-ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_land_id_fkey"
-    FOREIGN KEY ("land_id") REFERENCES "land_parcels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$ BEGIN
+  ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_land_id_fkey"
+      FOREIGN KEY ("land_id") REFERENCES "land_parcels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
 
--- AddForeignKey
-ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_user_id_fkey"
-    FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+DO $$ BEGIN
+  ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_user_id_fkey"
+      FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;

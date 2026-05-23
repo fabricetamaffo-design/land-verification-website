@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { signToken } from '../utils/jwt';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
