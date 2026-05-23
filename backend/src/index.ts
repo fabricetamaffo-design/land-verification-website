@@ -38,6 +38,7 @@ const rawOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
 
 const allowedOrigins = Array.from(new Set([
   ...rawOrigins,
+  'https://land-verification-website.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000',
 ]));
