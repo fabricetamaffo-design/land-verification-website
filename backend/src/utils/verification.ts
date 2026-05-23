@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 
 // Haversine formula — returns distance in kilometers between two GPS points
 function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {

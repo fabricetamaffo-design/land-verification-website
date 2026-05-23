@@ -6,11 +6,13 @@ import compression from 'compression';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
-import { PrismaClient, Role, LandStatus } from '@prisma/client';
+import { Role, LandStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import authRoutes from './routes/auth.routes';
 import landRoutes from './routes/land.routes';
 import adminRoutes from './routes/admin.routes';
+import { prisma } from './lib/prisma';
+import { authenticate } from './middleware/auth.middleware';
 
 dotenv.config();
 
@@ -74,7 +76,7 @@ app.use(cors({
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads', authenticate as express.RequestHandler, express.static(uploadsDir));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/lands', landRoutes);
@@ -103,7 +105,6 @@ app.listen(Number(PORT), '0.0.0.0', () => {
 });
 
 async function seedAdminIfNeeded() {
-  const prisma = new PrismaClient();
   try {
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@landverify.cm';
     let admin = await prisma.user.findUnique({ where: { email: adminEmail } });
@@ -179,8 +180,6 @@ async function seedAdminIfNeeded() {
     }
   } catch (e) {
     console.error('[SEED] Failed:', e);
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
