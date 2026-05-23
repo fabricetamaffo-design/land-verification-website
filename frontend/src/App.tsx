@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,10 +20,11 @@ import BrowsePage from './pages/BrowsePage';
 import AboutPage from './pages/AboutPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import UploadLandPage from './pages/admin/UploadLandPage';
-import ManageLandsPage from './pages/admin/ManageLandsPage';
-import EditLandPage from './pages/admin/EditLandPage';
+
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const UploadLandPage = lazy(() => import('./pages/admin/UploadLandPage'));
+const ManageLandsPage = lazy(() => import('./pages/admin/ManageLandsPage'));
+const EditLandPage = lazy(() => import('./pages/admin/EditLandPage'));
 
 function AppRoutes() {
   const location = useLocation();
@@ -50,11 +51,11 @@ function AppRoutes() {
           {/* Protected: logged-in users */}
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
 
-          {/* Protected: admins only */}
-          <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/admin/upload" element={<ProtectedRoute adminOnly><UploadLandPage /></ProtectedRoute>} />
-          <Route path="/admin/manage" element={<ProtectedRoute adminOnly><ManageLandsPage /></ProtectedRoute>} />
-          <Route path="/admin/edit/:id" element={<ProtectedRoute adminOnly><EditLandPage /></ProtectedRoute>} />
+          {/* Protected: admins only — lazy-loaded chunk */}
+          <Route path="/admin" element={<ProtectedRoute adminOnly><Suspense fallback={null}><AdminDashboard /></Suspense></ProtectedRoute>} />
+          <Route path="/admin/upload" element={<ProtectedRoute adminOnly><Suspense fallback={null}><UploadLandPage /></Suspense></ProtectedRoute>} />
+          <Route path="/admin/manage" element={<ProtectedRoute adminOnly><Suspense fallback={null}><ManageLandsPage /></Suspense></ProtectedRoute>} />
+          <Route path="/admin/edit/:id" element={<ProtectedRoute adminOnly><Suspense fallback={null}><EditLandPage /></Suspense></ProtectedRoute>} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </motion.div>
