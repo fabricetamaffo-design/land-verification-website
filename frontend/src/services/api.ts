@@ -1,7 +1,10 @@
 import axios from 'axios';
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, '');
-const baseURL = backendUrl ? `${backendUrl}/api` : '/api';
+const backendUrl = (
+  import.meta.env.VITE_BACKEND_URL ||
+  'https://land-verification-website-production.up.railway.app'
+).replace(/\/$/, '');
+const baseURL = `${backendUrl}/api`;
 
 const api = axios.create({ baseURL });
 

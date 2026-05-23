@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -30,15 +30,25 @@ const uploadsLandsDir = path.join(uploadsDir, 'lands');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:5173',
+// Support comma-separated FRONTEND_URL for multiple allowed origins
+const rawOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const allowedOrigins = Array.from(new Set([
+  ...rawOrigins,
+  'https://land-verification-website.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000',
-];
+]));
+
+console.log('[CORS] Allowed origins:', allowedOrigins);
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    console.warn(`[CORS] Blocked origin: ${origin}`);
     callback(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
@@ -55,6 +65,18 @@ app.use('/api/admin', adminRoutes);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// ── Global error handler ──────────────────────────────────────────────────
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  console.error('[UNHANDLED ERROR]', err.message);
+  res.status(500).json({ message: 'Internal server error.' });
+});
+
+// Catch unhandled promise rejections so the process doesn't crash
+process.on('unhandledRejection', (reason) => {
+  console.error('[UNHANDLED REJECTION]', reason);
 });
 
 app.listen(Number(PORT), '0.0.0.0', () => {
