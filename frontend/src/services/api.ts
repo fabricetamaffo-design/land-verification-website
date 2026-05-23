@@ -1,9 +1,15 @@
 import axios from 'axios';
 
-const backendUrl = (
+let backendUrl = (
   import.meta.env.VITE_BACKEND_URL ||
   'https://land-verification-website-production.up.railway.app'
 ).replace(/\/$/, '');
+
+// Guard: ensure protocol is always present (env var may be set without https://)
+if (backendUrl && !backendUrl.startsWith('http')) {
+  backendUrl = `https://${backendUrl}`;
+}
+
 const baseURL = `${backendUrl}/api`;
 
 const api = axios.create({ baseURL });
