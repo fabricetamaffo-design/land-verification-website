@@ -44,6 +44,7 @@ export interface LandParcel {
   documents?: LandDocument[];
   uploadedBy?: { id: string; name: string };
   ownershipHistory?: OwnershipRecord[];
+  _count?: { documents: number; ownershipHistory: number };
 }
 
 export interface SearchResult {

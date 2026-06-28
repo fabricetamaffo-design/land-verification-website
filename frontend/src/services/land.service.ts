@@ -27,8 +27,19 @@ export async function getQuarters() {
 }
 
 export async function adminGetAllLands() {
-  const res = await api.get('/admin/lands');
-  return res.data as { lands: LandParcel[] };
+  const lands: LandParcel[] = [];
+  let page = 1;
+  let totalPages = 1;
+
+  do {
+    const res = await api.get('/admin/lands', { params: { page, limit: 100 } });
+    const data = res.data as { lands: LandParcel[]; totalPages?: number };
+    lands.push(...data.lands);
+    totalPages = Math.max(1, data.totalPages || 1);
+    page += 1;
+  } while (page <= totalPages);
+
+  return { lands };
 }
 
 export async function adminUploadLand(formData: FormData) {
