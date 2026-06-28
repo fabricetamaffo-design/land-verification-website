@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LandVerifyCM Expo QR</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Arial, sans-serif;
+        background: #eef5ef;
+        color: #10251a;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+      }
+
+      main {
+        width: min(92vw, 520px);
+        padding: 28px;
+        border: 1px solid #b7d4c0;
+        border-radius: 22px;
+        background: #fff;
+        box-shadow: 0 18px 45px rgba(13, 43, 28, 0.14);
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 26px;
+      }
+
+      p {
+        margin: 8px 0 18px;
+        color: #62756a;
+        line-height: 1.45;
+      }
+
+      img {
+        width: min(72vw, 340px);
+        height: min(72vw, 340px);
+        image-rendering: pixelated;
+        border: 10px solid #ddf6e7;
+        border-radius: 18px;
+      }
+
+      code {
+        display: block;
+        margin-top: 18px;
+        padding: 12px;
+        border-radius: 12px;
+        background: #edf6ef;
+        color: #083d27;
+        font-weight: 700;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Scan with Expo Go</h1>
+      <p>Use Expo Go on your phone. The app is now Expo SDK 54 compatible.</p>
+      <img
+        alt="Expo Go QR code for LandVerifyCM Mobile"
+        src="https://api.qrserver.com/v1/create-qr-code/?size=720x720&margin=16&data=exp%3A%2F%2F192.168.100.254%3A8081"
+      />
+      <code>exp://192.168.100.254:8081</code>
+    </main>
+  </body>
+</html>
