@@ -16,7 +16,8 @@
     "react-native": "0.81.5",
     "react-native-svg": "15.12.1",
     "react-native-web": "^0.21.0",
-    "react-native-webview": "13.15.0"
+    "react-native-webview": "13.15.0",
+    "serve": "^14.2.5"
   },
   "devDependencies": {
     "@types/react": "~19.1.10",
@@ -25,7 +26,9 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
+    "build:web": "expo export --platform web",
     "ios": "expo start --ios",
+    "start:web": "serve dist --single --listen $PORT",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit"
   },
