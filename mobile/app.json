@@ -16,13 +16,23 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "runtimeVersion": "exposdk:54.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "02ae9725-cd6d-40ea-85cb-8011f7187d7e"
+      }
+    },
+    "owner": "nkam-ticha",
+    "updates": {
+      "url": "https://u.expo.dev/02ae9725-cd6d-40ea-85cb-8011f7187d7e"
+    }
   }
 }
