@@ -10,6 +10,11 @@ export interface User {
   role: Role;
 }
 
+export interface AdminUser extends User {
+  isActive: boolean;
+  createdAt: string;
+}
+
 export interface LandDocument {
   id: string;
   fileName: string;
@@ -42,9 +47,12 @@ export interface LandParcel {
   createdAt: string;
   updatedAt: string;
   documents?: LandDocument[];
-  uploadedBy?: { id: string; name: string };
+  uploadedBy?: { id?: string; name: string };
   ownershipHistory?: OwnershipRecord[];
-  _count?: { documents: number; ownershipHistory: number };
+  _count?: {
+    documents?: number;
+    ownershipHistory?: number;
+  };
 }
 
 export interface SearchResult {
@@ -62,9 +70,31 @@ export interface SearchResult {
   createdAt: string;
 }
 
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
+export interface AuditLog {
+  id: string;
+  landId: string;
+  userId: string;
+  action: string;
+  changes?: unknown;
+  timestamp: string;
+  user?: {
+    name: string;
+    email: string;
+  };
 }
 
+export interface PaginatedResponse {
+  count?: number;
+  total?: number;
+  page?: number;
+  limit?: number;
+  totalPages?: number;
+}
+
+export interface OwnershipDraft {
+  ownerName: string;
+  ownershipType: OwnershipType;
+  fromYear: string;
+  toYear: string;
+  notes: string;
+}
