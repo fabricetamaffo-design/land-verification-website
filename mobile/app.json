@@ -16,8 +16,7 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false,
-      "runtimeVersion": "exposdk:54.0.0"
+      "predictiveBackGestureEnabled": false
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,6 +32,9 @@
     "owner": "nkam-ticha",
     "updates": {
       "url": "https://u.expo.dev/02ae9725-cd6d-40ea-85cb-8011f7187d7e"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }
