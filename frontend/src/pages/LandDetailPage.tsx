@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { getLandById } from '../services/land.service';
+import { adminGetAllLands, getLandById } from '../services/land.service';
 import { LandParcel, OwnershipRecord, OwnershipType } from '../types';
 import StatusBadge, { isValid, getNotValidReason } from '../components/StatusBadge';
 import MapView from '../components/MapView';
 import { useLang } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 
 function DetailRow({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
@@ -33,7 +34,7 @@ const LAND_USE_ICONS: Record<string, string> = {
   RESIDENTIAL: '🏠', COMMERCIAL: '🏢', AGRICULTURAL: '🌾', MIXED: '🏙️', INDUSTRIAL: '🏭',
 };
 
-function OwnershipTimeline({ history, t }: { history: OwnershipRecord[]; t: any }) {
+function OwnershipTimeline({ history, t, revealSensitive }: { history: OwnershipRecord[]; t: any; revealSensitive: boolean }) {
   if (!history || history.length === 0) {
     return <p className="text-gray-400 text-sm italic">{t.ownership.noHistory}</p>;
   }
@@ -75,7 +76,7 @@ function OwnershipTimeline({ history, t }: { history: OwnershipRecord[]; t: any 
                 <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
                   <div>
                     <p className={`font-bold ${isCurrent ? 'text-green-800' : colors.text}`}>
-                      {record.ownerName}
+                      {revealSensitive ? record.ownerName : t.landDetail.protectedValue}
                       {isCurrent && <span className="ml-2 text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full font-semibold">Current Owner</span>}
                     </p>
                     <p className={`text-xs mt-0.5 ${isCurrent ? 'text-green-600' : colors.text} opacity-70`}>
@@ -91,7 +92,7 @@ function OwnershipTimeline({ history, t }: { history: OwnershipRecord[]; t: any 
                     </p>
                   </div>
                 </div>
-                {record.notes && (
+                {revealSensitive && record.notes && (
                   <p className={`text-xs mt-1 ${isCurrent ? 'text-green-700' : colors.text} opacity-70`}>{record.notes}</p>
                 )}
               </div>
@@ -109,14 +110,24 @@ export default function LandDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { t } = useLang();
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     if (!id) return;
+    setLoading(true);
+    setError('');
     getLandById(id)
       .then((data) => setLand(data.land))
+      .catch(async () => {
+        if (!isAdmin) throw new Error('not-found');
+        const { lands } = await adminGetAllLands();
+        const inactiveLand = lands.find((record) => record.id === id);
+        if (!inactiveLand) throw new Error('not-found');
+        setLand(inactiveLand);
+      })
       .catch(() => setError(t.landDetail.notFound))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, isAdmin]);
 
   if (loading) {
     return (
@@ -148,9 +159,14 @@ export default function LandDetailPage() {
   }
 
   const valid = isValid(land.status);
-  const notValidReason = !valid ? getNotValidReason(land.status, land.notes) : '';
+  const notValidReason = !valid
+    ? (isAdmin ? getNotValidReason(land.status, land.notes) : t.landDetail.notValidTitle)
+    : '';
   const currentOwner = land.ownershipHistory?.find((r) => r.toYear === null);
-  const ownershipCount = land.ownershipHistory?.length || 0;
+  const ownershipCount = land._count?.ownershipHistory ?? land.ownershipHistory?.length ?? 0;
+  const protectedValue = t.landDetail.protectedValue;
+  const visibleTitle = isAdmin ? land.titleNumber : protectedValue;
+  const visibleOwner = isAdmin ? (currentOwner?.ownerName || land.ownerName) : protectedValue;
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-16">
@@ -172,7 +188,7 @@ export default function LandDetailPage() {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
                   <p className="text-gray-400 text-xs uppercase tracking-widest font-semibold mb-2">{t.landDetail.landParcel}</p>
-                  <h1 className="text-3xl font-black tracking-tight">{land.titleNumber}</h1>
+                  <h1 className="text-3xl font-black tracking-tight break-words">{visibleTitle}</h1>
                   {land.titleApprovedYear && (
                     <p className="text-gray-400 mt-1 text-sm flex items-center gap-1.5">
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -181,7 +197,7 @@ export default function LandDetailPage() {
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  <StatusBadge status={land.status} notes={land.notes} />
+                  <StatusBadge status={land.status} notes={isAdmin ? land.notes : undefined} />
                   {land.landUseType && (
                     <span className="text-xs text-gray-400 bg-white/10 px-3 py-1 rounded-full">
                       {LAND_USE_ICONS[land.landUseType]} {LAND_USE_LABELS[land.landUseType] || land.landUseType}
@@ -232,16 +248,16 @@ export default function LandDetailPage() {
                 Land Record Details
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                <DetailRow label={t.landDetail.titleNumber} value={land.titleNumber} highlight />
-                <DetailRow label={t.landDetail.currentOwner} value={currentOwner?.ownerName || land.ownerName} highlight />
+                <DetailRow label={t.landDetail.titleNumber} value={visibleTitle} highlight />
+                <DetailRow label={t.landDetail.currentOwner} value={visibleOwner} highlight />
                 <DetailRow label={t.landDetail.quarter} value={land.quarter} />
                 <DetailRow label={t.landDetail.area} value={`${land.areaSqm.toLocaleString()} m²`} />
                 <DetailRow label={t.landDetail.landUseType} value={`${LAND_USE_ICONS[land.landUseType] || ''} ${LAND_USE_LABELS[land.landUseType] || land.landUseType}`} />
                 <DetailRow label={t.landDetail.titleApprovedYear} value={land.titleApprovedYear ? land.titleApprovedYear.toString() : t.landDetail.notSpecified} />
-                <DetailRow label={t.landDetail.registeredBy} value={land.uploadedBy?.name || '—'} />
+                <DetailRow label={t.landDetail.registeredBy} value={isAdmin ? (land.uploadedBy?.name || '—') : protectedValue} />
                 <DetailRow label={t.landDetail.dateRegistered} value={new Date(land.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} />
-                <DetailRow label={t.landDetail.gpsLat} value={land.gpsLat.toFixed(6)} />
-                <DetailRow label={t.landDetail.gpsLng} value={land.gpsLng.toFixed(6)} />
+                <DetailRow label={t.landDetail.gpsLat} value={isAdmin ? land.gpsLat.toFixed(6) : protectedValue} />
+                <DetailRow label={t.landDetail.gpsLng} value={isAdmin ? land.gpsLng.toFixed(6) : protectedValue} />
               </div>
 
               {/* Verification status summary */}
@@ -272,7 +288,7 @@ export default function LandDetailPage() {
                 </div>
               </div>
 
-              <OwnershipTimeline history={land.ownershipHistory || []} t={t} />
+              <OwnershipTimeline history={land.ownershipHistory || []} t={t} revealSensitive={isAdmin} />
             </div>
 
             {/* Map */}
@@ -284,7 +300,11 @@ export default function LandDetailPage() {
                 </svg>
                 {t.landDetail.gpsLocation}
               </h2>
-              {land.gpsLat && land.gpsLng ? (
+              {!isAdmin ? (
+                <div className="bg-gray-50 rounded-2xl p-10 text-center text-gray-500 border border-dashed border-gray-200">
+                  {t.landDetail.protectedLocation}
+                </div>
+              ) : land.gpsLat && land.gpsLng ? (
                 <MapView
                   lat={land.gpsLat}
                   lng={land.gpsLng}
@@ -301,7 +321,14 @@ export default function LandDetailPage() {
             </div>
 
             {/* Documents */}
-            {land.documents && land.documents.length > 0 && (
+            {!isAdmin ? (
+              <div className="px-4 sm:px-8 pb-6 sm:pb-8 border-t border-gray-100 pt-5 sm:pt-6">
+                <h2 className="text-lg font-bold text-gray-900 mb-3">{t.landDetail.documents}</h2>
+                <div className="bg-gray-50 border border-dashed border-gray-200 p-5 text-sm text-gray-500">
+                  {t.landDetail.protectedDocuments}
+                </div>
+              </div>
+            ) : land.documents && land.documents.length > 0 && (
               <div className="px-4 sm:px-8 pb-6 sm:pb-8 border-t border-gray-100 pt-5 sm:pt-6">
                 <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                   <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
