@@ -171,14 +171,9 @@ The frontend application will be available at `http://localhost:5173`.
 
 ---
 
-### Default Admin Credentials (after seed)
+### Administrator Setup
 
-| Field | Value |
-|---|---|
-| Email | admin@landverify.cm |
-| Password | Admin@1234 |
-
-> These credentials are for development and demonstration purposes only. Change them before any production deployment.
+Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in the backend environment before running the seed command. Administrator credentials are intentionally not stored in the repository.
 
 ---
 
@@ -194,6 +189,8 @@ Copy `backend/.env.example` to `backend/.env` and configure the following:
 | `PORT` | Backend server port | `5000` |
 | `NODE_ENV` | Runtime environment | `development` or `production` |
 | `FRONTEND_URL` | Allowed CORS origin for the frontend | `http://localhost:5173` |
+| `ADMIN_EMAIL` | Initial administrator email used by the seed process | Set privately |
+| `ADMIN_PASSWORD` | Initial administrator password used by the seed process | Use a strong secret |
 
 ---
 

@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { forgotPassword } from '../services/auth.service';
 import { useLang } from '../context/LanguageContext';
+import FormError from '../components/FormError';
 
 interface FormData { email: string; }
 
@@ -12,9 +13,11 @@ export default function ForgotPasswordPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   const [loading, setLoading] = useState(false);
   const [resetUrl, setResetUrl] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const { t } = useLang();
 
   const onSubmit = async (data: FormData) => {
+    setSubmitError('');
     setLoading(true);
     try {
       const res = await forgotPassword(data.email);
@@ -22,7 +25,9 @@ export default function ForgotPasswordPage() {
       toast.success('Reset link generated!');
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } };
-      toast.error(e.response?.data?.message || 'Something went wrong. Please try again.');
+      const message = e.response?.data?.message || 'The reset request failed. Please try again.';
+      setSubmitError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -55,6 +60,7 @@ export default function ForgotPasswordPage() {
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                <FormError message={submitError} />
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t.forgotPassword.email}</label>
                   <input

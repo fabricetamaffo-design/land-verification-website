@@ -169,10 +169,10 @@ export default function HomePage() {
             transition={{ delay: 0.75 }}
             className="flex flex-wrap items-center justify-center gap-3"
           >
-            <TrustBadge icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>} label="Fraud Prevention" />
-            <TrustBadge icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>} label="Instant Verification" />
-            <TrustBadge icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>} label="Data Protected" />
-            <TrustBadge icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>} label="Free to Use" />
+            <TrustBadge icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>} label="Conflict Checks" />
+            <TrustBadge icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>} label="Title Search" />
+            <TrustBadge icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>} label="Role-Based Access" />
+            <TrustBadge icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>} label="English & French" />
           </motion.div>
         </div>
 
@@ -199,10 +199,10 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <Section className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { target: 500, suffix: '+', label: t.stats.parcels,  icon: '🏘️', color: 'text-green-700' },
+              { target: 2,   suffix: '',  label: t.stats.parcels,  icon: '🌍', color: 'text-green-700' },
               { target: 3,   suffix: '',  label: t.stats.fraudLevels, icon: '🛡️', color: 'text-blue-700' },
-              { target: 99,  suffix: '%', label: t.stats.uptime,   icon: '⚡', color: 'text-amber-600' },
-              { target: 120, suffix: '+', label: t.stats.users,    icon: '👥', color: 'text-purple-700' },
+              { target: 1,   suffix: '',  label: t.stats.uptime,   icon: '🖥️', color: 'text-amber-600' },
+              { target: 1,   suffix: '',  label: t.stats.users,    icon: '📱', color: 'text-purple-700' },
             ].map((s, i) => (
               <motion.div
                 key={s.label}

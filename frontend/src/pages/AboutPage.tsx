@@ -4,26 +4,26 @@ import { motion, useInView } from 'framer-motion';
 import { useLang } from '../context/LanguageContext';
 
 const features = [
-  { icon: '🔍', title: 'Smart Search',       desc: 'Search by title number, parcel ID, or owner name across the full national registry.', gradient: 'from-blue-500 to-indigo-500',   bg: 'bg-blue-50',   border: 'border-blue-100',   text: 'text-blue-700' },
-  { icon: '🗺️', title: 'GPS Map View',       desc: 'Every land parcel is pinpointed on an interactive map with precise GPS coordinates.',  gradient: 'from-green-500 to-emerald-500', bg: 'bg-green-50',  border: 'border-green-100',  text: 'text-green-700' },
-  { icon: '🛡️', title: 'Fraud Detection',    desc: 'Automated detection of duplicate titles and suspicious GPS overlaps in real time.',    gradient: 'from-red-500 to-rose-500',      bg: 'bg-red-50',    border: 'border-red-100',    text: 'text-red-700' },
-  { icon: '🔐', title: 'Secure Access',      desc: 'Role-based access control with JWT authentication and encrypted data at rest.',        gradient: 'from-purple-500 to-violet-500', bg: 'bg-purple-50', border: 'border-purple-100', text: 'text-purple-700' },
-  { icon: '📋', title: 'Document Registry',  desc: 'Attach and retrieve official PDF and image documents tied to each land record.',       gradient: 'from-amber-500 to-orange-500',  bg: 'bg-amber-50',  border: 'border-amber-100',  text: 'text-amber-700' },
-  { icon: '🌍', title: 'Bilingual Platform', desc: 'Full English and French language support, toggled instantly for all users.',          gradient: 'from-teal-500 to-cyan-500',     bg: 'bg-teal-50',   border: 'border-teal-100',   text: 'text-teal-700' },
+  { icon: '🔍', title: 'Record Search', titleFr: 'Recherche de Dossiers', desc: 'Search saved records by land title number.', descFr: 'Recherchez les dossiers enregistrés par numéro de titre foncier.', gradient: 'from-blue-500 to-indigo-500', bg: 'bg-blue-50', border: 'border-blue-100', text: 'text-blue-700' },
+  { icon: '🗺️', title: 'GPS Map View', titleFr: 'Carte GPS', desc: 'View a parcel on a map when GPS coordinates are recorded.', descFr: 'Affichez une parcelle sur la carte lorsque ses coordonnées GPS sont enregistrées.', gradient: 'from-green-500 to-emerald-500', bg: 'bg-green-50', border: 'border-green-100', text: 'text-green-700' },
+  { icon: '🛡️', title: 'Conflict Checks', titleFr: 'Contrôle des Conflits', desc: 'Flag duplicate title numbers, GPS overlaps, and suspicious record data.', descFr: 'Signalez les titres en double, les chevauchements GPS et les données suspectes.', gradient: 'from-red-500 to-rose-500', bg: 'bg-red-50', border: 'border-red-100', text: 'text-red-700' },
+  { icon: '🔐', title: 'Controlled Access', titleFr: 'Accès Contrôlé', desc: 'Use account roles to limit access to private ownership and document details.', descFr: "Utilisez les rôles pour limiter l'accès aux propriétaires et aux documents privés.", gradient: 'from-purple-500 to-violet-500', bg: 'bg-purple-50', border: 'border-purple-100', text: 'text-purple-700' },
+  { icon: '📋', title: 'Document Records', titleFr: 'Documents Associés', desc: 'Associate PDF and image documents with a record for administrator review.', descFr: "Associez des documents PDF et images à un dossier pour l'examen administratif.", gradient: 'from-amber-500 to-orange-500', bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-700' },
+  { icon: '🌍', title: 'Two Languages', titleFr: 'Deux Langues', desc: 'Use the web interface in English or French.', descFr: "Utilisez l'interface web en anglais ou en français.", gradient: 'from-teal-500 to-cyan-500', bg: 'bg-teal-50', border: 'border-teal-100', text: 'text-teal-700' },
 ];
 
 const values = [
-  { icon: '🔍', label: 'Transparency',  gradient: 'from-blue-500 to-indigo-600',   desc: 'Complete, auditable records accessible to every citizen.' },
-  { icon: '🛡️', label: 'Security',      gradient: 'from-red-500 to-rose-600',      desc: 'Bank-grade data protection and fraud prevention built in.' },
-  { icon: '⚡', label: 'Reliability',   gradient: 'from-amber-500 to-orange-600',  desc: '99.9% uptime with redundant infrastructure and backups.' },
-  { icon: '🤝', label: 'Accessibility', gradient: 'from-green-500 to-emerald-600', desc: 'Land information made available to every Cameroonian.' },
+  { icon: '🔍', label: 'Clarity', labelFr: 'Clarté', gradient: 'from-blue-500 to-indigo-600', desc: 'Present recorded parcel information in a clear format.', descFr: 'Présenter clairement les informations enregistrées sur les parcelles.' },
+  { icon: '🛡️', label: 'Privacy', labelFr: 'Confidentialité', gradient: 'from-red-500 to-rose-600', desc: 'Keep sensitive ownership details behind administrator access.', descFr: "Réserver les données sensibles sur les propriétaires à l'accès administrateur." },
+  { icon: '⚙️', label: 'Practicality', labelFr: 'Utilité', gradient: 'from-amber-500 to-orange-600', desc: 'Support common checks with search, status, and map tools.', descFr: 'Faciliter les contrôles avec la recherche, le statut et la carte.' },
+  { icon: '🤝', label: 'Accessibility', labelFr: 'Accessibilité', gradient: 'from-green-500 to-emerald-600', desc: 'Provide English, French, web, and mobile interfaces.', descFr: 'Proposer des interfaces web et mobile en anglais et en français.' },
 ];
 
 const stats = [
-  { value: '500+', label: 'Parcels Verified',  labelFr: 'Parcelles Vérifiées' },
-  { value: '99%',  label: 'Platform Uptime',   labelFr: 'Disponibilité Plateforme' },
-  { value: '3',    label: 'Fraud Levels',       labelFr: 'Niveaux de Fraude' },
-  { value: '24/7', label: 'Service Availability', labelFr: 'Disponibilité du Service' },
+  { value: '2', label: 'Supported Languages',  labelFr: 'Langues Disponibles' },
+  { value: '3', label: 'Team Members',          labelFr: "Membres de l'Équipe" },
+  { value: '3', label: 'Verification Statuses', labelFr: 'Statuts de Vérification' },
+  { value: '2', label: 'User Interfaces',       labelFr: 'Interfaces Utilisateur' },
 ];
 
 const techStack = [
@@ -37,7 +37,6 @@ const techStack = [
   { name: 'PostgreSQL',    color: 'bg-indigo-100 text-indigo-800 border-indigo-300' },
   { name: 'Prisma ORM',    color: 'bg-teal-100 text-teal-800 border-teal-300' },
   { name: 'JWT Auth',      color: 'bg-amber-100 text-amber-800 border-amber-300' },
-  { name: 'Socket.io',     color: 'bg-gray-100 text-gray-700 border-gray-300' },
   { name: 'Leaflet.js',    color: 'bg-emerald-100 text-emerald-800 border-emerald-300' },
 ];
 
@@ -141,8 +140,8 @@ export default function AboutPage() {
                     <div className={`bg-gradient-to-br ${v.gradient} absolute inset-0 rounded-2xl`} />
                     <div className="relative z-10">
                       <div className="text-3xl mb-3">{v.icon}</div>
-                      <p className="font-black text-sm mb-1">{v.label}</p>
-                      <p className="text-white/75 text-xs leading-relaxed">{v.desc}</p>
+                      <p className="font-black text-sm mb-1">{lang === 'fr' ? v.labelFr : v.label}</p>
+                      <p className="text-white/75 text-xs leading-relaxed">{lang === 'fr' ? v.descFr : v.desc}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -165,8 +164,8 @@ export default function AboutPage() {
               </h2>
               <p className="text-gray-500 text-base max-w-lg mx-auto">
                 {lang === 'fr'
-                  ? 'Chaque fonctionnalité a été conçue pour lutter contre la fraude foncière et donner aux citoyens confiance dans les transactions immobilières.'
-                  : 'Every feature is designed to combat land fraud and give citizens confidence in property transactions.'}
+                  ? 'Ces fonctions aident à consulter les données enregistrées et à repérer les dossiers qui nécessitent une vérification supplémentaire.'
+                  : 'These features help users review saved data and identify records that need further checking.'}
               </p>
             </motion.div>
 
@@ -181,8 +180,8 @@ export default function AboutPage() {
                   <div className={`w-12 h-12 bg-gradient-to-br ${f.gradient} rounded-xl flex items-center justify-center text-2xl mb-4 shadow-md group-hover:scale-110 transition-transform duration-300`}>
                     {f.icon}
                   </div>
-                  <h3 className={`font-black text-base mb-2 ${f.text}`}>{f.title}</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">{f.desc}</p>
+                  <h3 className={`font-black text-base mb-2 ${f.text}`}>{lang === 'fr' ? f.titleFr : f.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{lang === 'fr' ? f.descFr : f.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -203,8 +202,8 @@ export default function AboutPage() {
               </h3>
               <p className="text-gray-400 text-sm mb-10 max-w-md mx-auto">
                 {lang === 'fr'
-                  ? 'Technologies modernes et prêtes pour la production, sélectionnées pour la performance, la sécurité et la fiabilité.'
-                  : 'Modern, production-grade technologies selected for performance, security, and long-term reliability.'}
+                  ? 'Les principales technologies utilisées pour construire le site, l’API et la base de données.'
+                  : 'The main technologies used to build the website, API, and database.'}
               </p>
             </motion.div>
 

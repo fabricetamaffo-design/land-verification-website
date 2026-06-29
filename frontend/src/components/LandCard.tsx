@@ -14,9 +14,18 @@ const LAND_USE_LABELS: Record<string, string> = {
   AGRICULTURAL: 'Agricultural', MIXED: 'Mixed Use', INDUSTRIAL: 'Industrial',
 };
 
-export default function LandCard({ land, index = 0 }: { land: SearchResult; index?: number }) {
+export default function LandCard({
+  land,
+  index = 0,
+  revealSensitive = false,
+}: {
+  land: SearchResult;
+  index?: number;
+  revealSensitive?: boolean;
+}) {
   const { t } = useLang();
   const valid = isValid(land.status);
+  const visibleOwner = revealSensitive ? land.ownerName : t.landDetail.protectedValue;
 
   return (
     <motion.div
@@ -47,7 +56,7 @@ export default function LandCard({ land, index = 0 }: { land: SearchResult; inde
           {/* Details Grid */}
           <div className="grid grid-cols-2 gap-3 text-xs">
             {[
-              { label: t.landCard.owner, value: land.ownerName },
+              { label: t.landCard.owner, value: visibleOwner },
               { label: t.landCard.quarter, value: land.quarter },
               { label: t.landCard.area, value: `${land.areaSqm.toLocaleString()} m²` },
               { label: t.landCard.registered, value: new Date(land.createdAt).toLocaleDateString('en-GB') },

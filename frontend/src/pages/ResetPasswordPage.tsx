@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { resetPassword } from '../services/auth.service';
 import { useLang } from '../context/LanguageContext';
+import FormError from '../components/FormError';
 
 interface FormData { newPassword: string; confirmPassword: string; }
 
@@ -12,6 +13,7 @@ export default function ResetPasswordPage() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [searchParams] = useSearchParams();
   const { t } = useLang();
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ export default function ResetPasswordPage() {
 
   const onSubmit = async (data: FormData) => {
     if (!token) { toast.error('Invalid reset link.'); return; }
+    setSubmitError('');
     setLoading(true);
     try {
       await resetPassword(token, data.newPassword);
@@ -26,7 +29,9 @@ export default function ResetPasswordPage() {
       setTimeout(() => navigate('/login'), 2500);
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } };
-      toast.error(e.response?.data?.message || 'Reset failed. Link may be expired.');
+      const message = e.response?.data?.message || 'Reset failed. The link may be expired.';
+      setSubmitError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -66,6 +71,7 @@ export default function ResetPasswordPage() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <FormError message={submitError} />
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t.resetPassword.newPassword}</label>
             <div className="relative">

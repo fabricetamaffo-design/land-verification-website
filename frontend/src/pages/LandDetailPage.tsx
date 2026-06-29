@@ -165,7 +165,7 @@ export default function LandDetailPage() {
   const currentOwner = land.ownershipHistory?.find((r) => r.toYear === null);
   const ownershipCount = land._count?.ownershipHistory ?? land.ownershipHistory?.length ?? 0;
   const protectedValue = t.landDetail.protectedValue;
-  const visibleTitle = isAdmin ? land.titleNumber : protectedValue;
+  const visibleTitle = land.titleNumber;
   const visibleOwner = isAdmin ? (currentOwner?.ownerName || land.ownerName) : protectedValue;
 
   return (
@@ -197,7 +197,7 @@ export default function LandDetailPage() {
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  <StatusBadge status={land.status} notes={isAdmin ? land.notes : undefined} />
+                  <StatusBadge status={land.status} notes={isAdmin ? land.notes : undefined} showReason={isAdmin} />
                   {land.landUseType && (
                     <span className="text-xs text-gray-400 bg-white/10 px-3 py-1 rounded-full">
                       {LAND_USE_ICONS[land.landUseType]} {LAND_USE_LABELS[land.landUseType] || land.landUseType}
@@ -256,8 +256,8 @@ export default function LandDetailPage() {
                 <DetailRow label={t.landDetail.titleApprovedYear} value={land.titleApprovedYear ? land.titleApprovedYear.toString() : t.landDetail.notSpecified} />
                 <DetailRow label={t.landDetail.registeredBy} value={isAdmin ? (land.uploadedBy?.name || '—') : protectedValue} />
                 <DetailRow label={t.landDetail.dateRegistered} value={new Date(land.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} />
-                <DetailRow label={t.landDetail.gpsLat} value={isAdmin ? land.gpsLat.toFixed(6) : protectedValue} />
-                <DetailRow label={t.landDetail.gpsLng} value={isAdmin ? land.gpsLng.toFixed(6) : protectedValue} />
+                <DetailRow label={t.landDetail.gpsLat} value={land.gpsLat.toFixed(6)} />
+                <DetailRow label={t.landDetail.gpsLng} value={land.gpsLng.toFixed(6)} />
               </div>
 
               {/* Verification status summary */}
@@ -288,7 +288,7 @@ export default function LandDetailPage() {
                 </div>
               </div>
 
-              <OwnershipTimeline history={land.ownershipHistory || []} t={t} revealSensitive={isAdmin} />
+              <OwnershipTimeline history={land.ownershipHistory || []} t={t} revealSensitive />
             </div>
 
             {/* Map */}
@@ -300,17 +300,12 @@ export default function LandDetailPage() {
                 </svg>
                 {t.landDetail.gpsLocation}
               </h2>
-              {!isAdmin ? (
-                <div className="bg-gray-50 rounded-2xl p-10 text-center text-gray-500 border border-dashed border-gray-200">
-                  {t.landDetail.protectedLocation}
-                </div>
-              ) : land.gpsLat && land.gpsLng ? (
+              {land.gpsLat && land.gpsLng ? (
                 <MapView
                   lat={land.gpsLat}
                   lng={land.gpsLng}
-                  title={`${land.titleNumber} — ${land.ownerName}`}
+                  title={land.titleNumber}
                   titleNumber={land.titleNumber}
-                  ownerName={currentOwner?.ownerName || land.ownerName}
                   quarter={land.quarter}
                   areaSqm={land.areaSqm}
                   status={land.status}

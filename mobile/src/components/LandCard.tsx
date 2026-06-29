@@ -20,6 +20,7 @@ export function LandCard({
   admin?: boolean;
 }) {
   const { lang, t } = useLanguage();
+  const protectedValue = t.land.protectedValue;
 
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [commonStyles.card, styles.card, pressed && styles.pressed]}>
@@ -37,7 +38,7 @@ export function LandCard({
         <StatusBadge status={land.status} admin={admin} />
       </View>
       <View style={styles.grid}>
-        <Metric icon={<UserRound size={15} color={colors.primary} />} label={t.landCard.owner} value={land.ownerName} />
+        <Metric icon={<UserRound size={15} color={colors.primary} />} label={t.landCard.owner} value={admin ? land.ownerName : protectedValue} />
         <Metric icon={<MapPin size={15} color={colors.primary} />} label={t.landCard.quarter} value={land.quarter} />
         <Metric icon={<Ruler size={15} color={colors.primary} />} label={t.landCard.area} value={formatAreaLabel(t, land.areaSqm)} />
         <Metric icon={<CalendarDays size={15} color={colors.primary} />} label={t.landCard.registered} value={formatDateLabel(t, lang, land.createdAt)} />

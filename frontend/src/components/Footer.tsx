@@ -23,9 +23,8 @@ export default function Footer() {
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
               {t.footer.tagline}
             </p>
-            <div className="mt-5 flex items-center space-x-3">
-              <div className="w-2 h-2 rounded-full bg-green-400 pulse-dot" />
-              <span className="text-xs text-green-400 font-medium">System Online — 99% Uptime</span>
+            <div className="mt-5 text-xs text-gray-500">
+              Web and mobile capstone project
             </div>
           </div>
 

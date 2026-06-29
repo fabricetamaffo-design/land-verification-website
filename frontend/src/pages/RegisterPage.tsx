@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { registerUser } from '../services/auth.service';
 import { useLang } from '../context/LanguageContext';
+import FormError from '../components/FormError';
 
 interface FormData {
   name: string;
@@ -17,6 +18,7 @@ export default function RegisterPage() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const { t } = useLang();
   const navigate = useNavigate();
 
@@ -37,6 +39,7 @@ export default function RegisterPage() {
   const strength = getPasswordStrength(password);
 
   const onSubmit = async (data: FormData) => {
+    setSubmitError('');
     setLoading(true);
     try {
       const res = await registerUser({ name: data.name, email: data.email, password: data.password });
@@ -44,7 +47,9 @@ export default function RegisterPage() {
       setTimeout(() => navigate('/login'), 2000);
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } };
-      toast.error(e.response?.data?.message || 'Registration failed. Please try again.');
+      const message = e.response?.data?.message || 'Registration failed. Please try again.';
+      setSubmitError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -105,6 +110,7 @@ export default function RegisterPage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <FormError message={submitError} />
             {/* Full name */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t.register.name}</label>

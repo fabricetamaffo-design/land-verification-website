@@ -20,3 +20,26 @@ export function authenticate(req: AuthRequest, res: Response, next: NextFunction
     res.status(401).json({ message: 'Invalid or expired token.' });
   }
 }
+
+/**
+ * Reads a valid session when one is present, but keeps public land routes
+ * available to guests. Invalid or expired credentials are treated as a guest
+ * session; controllers must explicitly check the attached role before
+ * returning private registry fields.
+ */
+export function optionalAuthenticate(req: AuthRequest, _res: Response, next: NextFunction): void {
+  const header = req.headers.authorization;
+  if (!header || !header.startsWith('Bearer ')) {
+    next();
+    return;
+  }
+
+  try {
+    const token = header.slice('Bearer '.length).trim();
+    if (token) req.user = verifyToken(token);
+  } catch {
+    req.user = undefined;
+  }
+
+  next();
+}

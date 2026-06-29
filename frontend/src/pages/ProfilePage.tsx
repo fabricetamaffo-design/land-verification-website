@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
 import { changePassword } from '../services/auth.service';
+import FormError from '../components/FormError';
 
 interface PasswordForm {
   currentPassword: string;
@@ -17,9 +18,11 @@ export default function ProfilePage() {
   const { t } = useLang();
   const [loading, setLoading] = useState(false);
   const [showPasswords, setShowPasswords] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<PasswordForm>();
 
   const onSubmit = async (data: PasswordForm) => {
+    setSubmitError('');
     setLoading(true);
     try {
       await changePassword(data.currentPassword, data.newPassword);
@@ -27,7 +30,9 @@ export default function ProfilePage() {
       reset();
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } };
-      toast.error(e.response?.data?.message || 'Password change failed.');
+      const message = e.response?.data?.message || 'Password change failed.';
+      setSubmitError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -104,6 +109,7 @@ export default function ProfilePage() {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="px-4 sm:px-8 py-6 space-y-4">
+              <FormError message={submitError} />
               {[
                 { name: 'currentPassword' as const, label: t.profile.currentPassword, placeholder: 'Current password' },
                 { name: 'newPassword' as const, label: t.profile.newPassword, placeholder: 'New password (min 8 chars)' },

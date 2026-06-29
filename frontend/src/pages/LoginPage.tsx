@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { loginUser } from '../services/auth.service';
 import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
+import FormError from '../components/FormError';
 
 interface FormData { email: string; password: string; }
 
@@ -13,11 +14,13 @@ export default function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const { login } = useAuth();
   const { t } = useLang();
   const navigate = useNavigate();
 
   const onSubmit = async (data: FormData) => {
+    setSubmitError('');
     setLoading(true);
     try {
       const res = await loginUser(data);
@@ -26,7 +29,9 @@ export default function LoginPage() {
       navigate(res.user.role === 'ADMIN' ? '/admin' : '/search');
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } };
-      toast.error(e.response?.data?.message || 'Login failed. Please check your credentials.');
+      const message = e.response?.data?.message || (t.login.error);
+      setSubmitError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -51,10 +56,10 @@ export default function LoginPage() {
           </div>
           <h2 className="text-4xl font-black text-white mb-4 drop-shadow-lg">LandVerifyCM</h2>
           <p className="text-green-100 leading-relaxed text-base font-medium">
-            Secure, centralized land verification platform for Cameroon. Protecting your property rights.
+            Search land records and review verification results in one place.
           </p>
           <div className="mt-10 grid grid-cols-3 gap-4">
-            {['500+ Parcels', '99% Uptime', 'Fraud-Free'].map((s) => (
+            {['Title Search', 'GPS Map', 'Status Checks'].map((s) => (
               <div key={s} className="bg-white/15 border border-white/30 backdrop-blur-sm rounded-xl p-3 text-center">
                 <p className="text-white font-bold text-sm drop-shadow">{s}</p>
               </div>
@@ -86,6 +91,7 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <FormError message={submitError} />
             {/* Email */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t.login.email}</label>

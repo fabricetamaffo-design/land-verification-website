@@ -16,10 +16,12 @@ export default function StatusBadge({
   status,
   notes,
   compact = false,
+  showReason = false,
 }: {
   status: LandStatus;
   notes?: string | null;
   compact?: boolean;
+  showReason?: boolean;
 }) {
   const { t } = useLang();
   const valid = isValid(status);
@@ -43,7 +45,7 @@ export default function StatusBadge({
         <span>✕</span>
         {t.status.NOT_VALID}
       </span>
-      {!compact && reason && (
+      {!compact && showReason && reason && (
         <p className="text-[10px] text-red-500 font-medium leading-tight max-w-[200px]">{reason}</p>
       )}
     </div>

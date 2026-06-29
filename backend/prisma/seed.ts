@@ -4,13 +4,19 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  const adminPassword = await bcrypt.hash('Admin@1234', 12);
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const rawAdminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminEmail || !rawAdminPassword) {
+    throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD are required to seed the database.');
+  }
+
+  const adminPassword = await bcrypt.hash(rawAdminPassword, 12);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@landverify.cm' },
+    where: { email: adminEmail },
     update: {},
     create: {
       name: 'System Administrator',
-      email: 'admin@landverify.cm',
+      email: adminEmail,
       passwordHash: adminPassword,
       role: Role.ADMIN,
     },
@@ -119,7 +125,7 @@ async function main() {
     }
   }
 
-  console.log('Seed complete. Admin: admin@landverify.cm / Admin@1234');
+  console.log(`Seed complete. Admin account created for ${adminEmail}.`);
 }
 
 main()

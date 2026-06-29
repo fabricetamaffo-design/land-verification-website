@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { searchLands } from '../services/land.service';
 import { SearchResult } from '../types';
 import LandCard from '../components/LandCard';
+import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
 
 function SkeletonCard() {
@@ -33,6 +34,7 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState('');
+  const { isAdmin } = useAuth();
   const { t } = useLang();
 
   const handleSearch = async (q: string) => {
@@ -145,7 +147,9 @@ export default function SearchPage() {
                 </motion.div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {results.map((land, i) => <LandCard key={land.id} land={land} index={i} />)}
+                  {results.map((land, i) => (
+                    <LandCard key={land.id} land={land} index={i} revealSensitive={isAdmin} />
+                  ))}
                 </div>
               )}
             </motion.div>

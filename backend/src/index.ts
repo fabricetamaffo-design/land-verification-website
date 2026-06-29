@@ -13,6 +13,7 @@ import landRoutes from './routes/land.routes';
 import adminRoutes from './routes/admin.routes';
 import { prisma } from './lib/prisma';
 import { authenticate } from './middleware/auth.middleware';
+import { requireAdmin } from './middleware/admin.middleware';
 
 dotenv.config();
 
@@ -76,7 +77,12 @@ app.use(cors({
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-app.use('/uploads', authenticate as express.RequestHandler, express.static(uploadsDir));
+app.use(
+  '/uploads',
+  authenticate as express.RequestHandler,
+  requireAdmin as express.RequestHandler,
+  express.static(uploadsDir),
+);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/lands', landRoutes);
@@ -106,10 +112,15 @@ app.listen(Number(PORT), '0.0.0.0', () => {
 
 async function seedAdminIfNeeded() {
   try {
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@landverify.cm';
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminEmail || !adminPassword) {
+      console.warn('[SEED] ADMIN_EMAIL and ADMIN_PASSWORD are required; automatic seeding was skipped.');
+      return;
+    }
+
     let admin = await prisma.user.findUnique({ where: { email: adminEmail } });
     if (!admin) {
-      const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@1234';
       const passwordHash = await bcrypt.hash(adminPassword, 12);
       admin = await prisma.user.create({
         data: { name: 'System Administrator', email: adminEmail, passwordHash, role: Role.ADMIN },

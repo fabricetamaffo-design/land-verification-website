@@ -3,6 +3,7 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 import { KeyRound, LogOut, ShieldCheck } from 'lucide-react-native';
 import { Button } from '../components/Button';
 import { InfoRow } from '../components/InfoRow';
+import { Notice } from '../components/Notice';
 import { Screen } from '../components/Screen';
 import { TextField } from '../components/TextField';
 import { useAuth } from '../context/AuthContext';
@@ -10,19 +11,23 @@ import { useLanguage } from '../context/LanguageContext';
 import { useNavigation } from '../navigation/NavigationContext';
 import { colors } from '../theme/colors';
 import { commonStyles, spacing } from '../theme/styles';
+import { getFriendlyErrorMessage } from '../services/api';
 
 export function ProfileScreen() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [formError, setFormError] = useState('');
   const [loading, setLoading] = useState(false);
   const { user, isAuthenticated, isAdmin, logout, changePassword } = useAuth();
   const { navigate, reset } = useNavigation();
   const { t } = useLanguage();
 
   async function submitPassword() {
+    if (loading) return;
+    setFormError('');
     if (newPassword.length < 8 || newPassword !== confirm) {
-      Alert.alert(t.auth.checkPasswordTitle, t.auth.checkPasswordMessage);
+      setFormError(t.auth.checkPasswordMessage);
       return;
     }
     setLoading(true);
@@ -33,7 +38,7 @@ export function ProfileScreen() {
       setConfirm('');
       Alert.alert(t.profile.passwordUpdated, message);
     } catch (err) {
-      Alert.alert(t.profile.updateFailed, err instanceof Error ? err.message : t.common.failed);
+      setFormError(getFriendlyErrorMessage(err, t.common.failed));
     } finally {
       setLoading(false);
     }
@@ -72,6 +77,7 @@ export function ProfileScreen() {
         <TextField label={t.profile.currentPassword} value={currentPassword} onChangeText={setCurrentPassword} secureTextEntry style={styles.topGap} />
         <TextField label={t.profile.newPassword} value={newPassword} onChangeText={setNewPassword} secureTextEntry style={styles.topGap} />
         <TextField label={t.profile.confirmNewPassword} value={confirm} onChangeText={setConfirm} secureTextEntry style={styles.topGap} />
+        {!!formError && <Notice message={formError} />}
         <Button title={t.profile.updatePassword} icon={<KeyRound size={17} color={colors.white} />} onPress={submitPassword} loading={loading} style={styles.topGap} />
       </View>
 

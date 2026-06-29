@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { KeyRound, RotateCcw } from 'lucide-react-native';
 import { Button } from '../components/Button';
+import { Notice } from '../components/Notice';
 import { Screen } from '../components/Screen';
 import { TextField } from '../components/TextField';
 import { useLanguage } from '../context/LanguageContext';
 import { useNavigation } from '../navigation/NavigationContext';
-import { authApi } from '../services/api';
+import { authApi, getFriendlyErrorMessage } from '../services/api';
 import { colors } from '../theme/colors';
 import { commonStyles, spacing } from '../theme/styles';
 
@@ -19,11 +20,18 @@ function tokenFromResetUrl(resetUrl?: string) {
 export function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
+  const [formError, setFormError] = useState('');
   const [loading, setLoading] = useState(false);
   const { navigate } = useNavigation();
   const { t } = useLanguage();
 
   async function submit() {
+    if (loading) return;
+    setFormError('');
+    if (!email.trim()) {
+      setFormError(t.auth.checkCredentials);
+      return;
+    }
     setLoading(true);
     try {
       const result = await authApi.forgotPassword(email.trim());
@@ -31,7 +39,7 @@ export function ForgotPasswordScreen() {
       setToken(resetToken);
       Alert.alert(t.auth.resetGenerated, result.message);
     } catch (err) {
-      Alert.alert(t.auth.resetFailed, err instanceof Error ? err.message : t.common.failed);
+      setFormError(getFriendlyErrorMessage(err, t.common.failed));
     } finally {
       setLoading(false);
     }
@@ -41,6 +49,7 @@ export function ForgotPasswordScreen() {
     <Screen title={t.auth.forgotTitle} subtitle={t.auth.forgotSubtitle}>
       <View style={commonStyles.card}>
         <TextField label={t.auth.email} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+        {!!formError && <Notice message={formError} />}
         <Button title={t.auth.generateReset} icon={<KeyRound size={18} color={colors.white} />} onPress={submit} loading={loading} style={styles.button} />
       </View>
 

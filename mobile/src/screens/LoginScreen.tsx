@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { KeyRound, LogIn, UserPlus } from 'lucide-react-native';
 import { Button } from '../components/Button';
 import { Notice } from '../components/Notice';
@@ -13,8 +13,8 @@ import { colors } from '../theme/colors';
 import { commonStyles, spacing } from '../theme/styles';
 
 export function LoginScreen() {
-  const [email, setEmail] = useState('admin@landverify.cm');
-  const [password, setPassword] = useState('Admin@1234');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -55,10 +55,6 @@ export function LoginScreen() {
         <Button title={t.auth.createAccount} icon={<UserPlus size={16} color={colors.primaryDark} />} variant="secondary" onPress={() => navigate({ name: 'Register' })} />
       </View>
 
-      <View style={styles.demo}>
-        <Text style={styles.demoTitle}>{t.auth.demoTitle}</Text>
-        <Text style={styles.demoText}>admin@landverify.cm / Admin@1234</Text>
-      </View>
     </Screen>
   );
 }
@@ -81,22 +77,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: spacing.lg,
-  },
-  demo: {
-    backgroundColor: colors.amberSoft,
-    borderWidth: 1,
-    borderColor: '#f1d38b',
-    borderRadius: 10,
-    padding: spacing.lg,
-    marginTop: spacing.lg,
-  },
-  demoTitle: {
-    color: colors.amber,
-    fontWeight: '900',
-    marginBottom: 4,
-  },
-  demoText: {
-    color: colors.text,
-    fontWeight: '800',
   },
 });

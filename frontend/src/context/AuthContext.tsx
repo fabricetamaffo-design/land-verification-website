@@ -20,9 +20,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const savedToken = localStorage.getItem('lv_token');
     const savedUser = localStorage.getItem('lv_user');
     if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
+      try {
+        setToken(savedToken);
+        setUser(JSON.parse(savedUser));
+      } catch {
+        localStorage.removeItem('lv_token');
+        localStorage.removeItem('lv_user');
+      }
     }
+
+    const handleSessionExpired = () => {
+      setToken(null);
+      setUser(null);
+    };
+    window.addEventListener('lv:session-expired', handleSessionExpired);
+    return () => window.removeEventListener('lv:session-expired', handleSessionExpired);
   }, []);
 
   const login = (newToken: string, newUser: User) => {

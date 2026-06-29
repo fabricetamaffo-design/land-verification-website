@@ -25,7 +25,7 @@ export function LandDetailScreen({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [docLoading, setDocLoading] = useState('');
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const { lang, t } = useLanguage();
   const { navigate } = useNavigation();
 
@@ -54,8 +54,8 @@ export function LandDetailScreen({ id }: { id: string }) {
   }, [land]);
 
   async function openDocument(doc: LandDocument) {
-    if (!isAuthenticated) {
-      Alert.alert(t.land.loginRequiredTitle, t.land.loginRequiredMessage);
+    if (!isAdmin) {
+      Alert.alert(t.land.adminRequiredTitle, t.land.protectedDocuments);
       return;
     }
     const fileName = normalizeDocumentName(doc.filePath);
@@ -85,6 +85,8 @@ export function LandDetailScreen({ id }: { id: string }) {
   if (error || !land) return <Screen><StateView title={t.land.unavailable} message={error} actionLabel={t.land.tryAgain} onAction={load} /></Screen>;
 
   const notValid = land.status !== 'VALID';
+  const protectedValue = t.land.protectedValue;
+  const visibleOwner = isAdmin ? land.ownerName : protectedValue;
 
   return (
     <Screen title={land.titleNumber} subtitle={`${land.quarter} - ${formatAreaLabel(t, land.areaSqm)}`} refreshing={loading} onRefresh={load}>
@@ -92,14 +94,14 @@ export function LandDetailScreen({ id }: { id: string }) {
         <View style={styles.headerTop}>
           <View style={styles.titleBlock}>
             <Text style={styles.kicker}>{t.land.currentOwner}</Text>
-            <Text style={styles.owner}>{land.ownerName}</Text>
+            <Text style={styles.owner}>{visibleOwner}</Text>
           </View>
           <StatusBadge status={land.status} admin={isAdmin} />
         </View>
         {notValid && (
           <View style={styles.warningBox}>
             <ShieldAlert size={18} color="#ffd4d4" />
-            <Text style={styles.warning}>{notValidReasonLabel(t, land.status, land.notes)}</Text>
+            <Text style={styles.warning}>{isAdmin ? notValidReasonLabel(t, land.status, land.notes) : t.land.notValidReason}</Text>
           </View>
         )}
         {isAdmin && (
@@ -113,12 +115,12 @@ export function LandDetailScreen({ id }: { id: string }) {
       <View style={commonStyles.card}>
         <SectionTitle icon={<FileText size={20} color={colors.primary} />} title={t.land.detailsTitle} />
         <InfoRow label={t.land.titleNumber} value={land.titleNumber} />
-        <InfoRow label={t.land.owner} value={land.ownerName} />
+        <InfoRow label={t.land.owner} value={visibleOwner} />
         <InfoRow label={t.land.quarter} value={land.quarter} />
         <InfoRow label={t.land.area} value={formatAreaLabel(t, land.areaSqm)} />
         <InfoRow label={t.land.landUse} value={landUseName(t, land.landUseType)} />
         <InfoRow label={t.land.titleApproved} value={land.titleApprovedYear ? String(land.titleApprovedYear) : t.common.notSpecified} />
-        <InfoRow label={t.land.registeredBy} value={land.uploadedBy?.name || t.common.notSpecified} />
+        <InfoRow label={t.land.registeredBy} value={isAdmin ? (land.uploadedBy?.name || t.common.notSpecified) : protectedValue} />
         <InfoRow label={t.land.registered} value={formatDateLabel(t, lang, land.createdAt)} />
         <InfoRow label={t.land.latitude} value={land.gpsLat.toFixed(6)} />
         <InfoRow label={t.land.longitude} value={land.gpsLng.toFixed(6)} />
@@ -158,7 +160,7 @@ export function LandDetailScreen({ id }: { id: string }) {
 
       <View style={commonStyles.card}>
         <SectionTitle icon={<FileText size={20} color={colors.primary} />} title={t.land.documentsTitle} />
-        {land.documents?.length ? land.documents.map((doc) => (
+        {!isAdmin ? <Text style={commonStyles.body}>{t.land.protectedDocuments}</Text> : land.documents?.length ? land.documents.map((doc) => (
           <Pressable key={doc.id} onPress={() => openDocument(doc)} style={styles.document}>
             <View style={{ flex: 1 }}>
               <Text style={styles.docName}>{doc.fileName}</Text>

@@ -8,6 +8,7 @@ import { Screen } from '../components/Screen';
 import { StateView } from '../components/StateView';
 import { TextField } from '../components/TextField';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import { useNavigation } from '../navigation/NavigationContext';
 import { getFriendlyErrorMessage, landApi } from '../services/api';
 import type { SearchResult } from '../shared';
@@ -23,6 +24,7 @@ export function SearchScreen({ initialQuery }: { initialQuery?: string }) {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const { navigate } = useNavigation();
+  const { isAdmin } = useAuth();
   const { t } = useLanguage();
 
   async function runSearch(nextPage = 1, append = false) {
@@ -77,7 +79,7 @@ export function SearchScreen({ initialQuery }: { initialQuery?: string }) {
       )}
       {!!results.length && <Text style={styles.count}>{results.length} {results.length === 1 ? t.search.resultSingular : t.search.resultPlural}</Text>}
       {results.map((land) => (
-        <LandCard key={land.id} land={land} onPress={() => navigate({ name: 'LandDetail', id: land.id })} />
+        <LandCard key={land.id} land={land} admin={isAdmin} onPress={() => navigate({ name: 'LandDetail', id: land.id })} />
       ))}
       {page < totalPages && (
         <Button title={t.search.loadMore} variant="secondary" loading={loading} onPress={() => runSearch(page + 1, true)} />

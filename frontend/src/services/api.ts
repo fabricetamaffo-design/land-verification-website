@@ -23,10 +23,16 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
+    const requestUrl = String(err.config?.url || '');
+    const isAuthenticationRequest = requestUrl.includes('/auth/login')
+      || requestUrl.includes('/auth/register')
+      || requestUrl.includes('/auth/forgot-password')
+      || requestUrl.includes('/auth/reset-password');
+
+    if (err.response?.status === 401 && !isAuthenticationRequest) {
       localStorage.removeItem('lv_token');
       localStorage.removeItem('lv_user');
-      window.location.href = '/login';
+      window.dispatchEvent(new Event('lv:session-expired'));
     }
     return Promise.reject(err);
   }
